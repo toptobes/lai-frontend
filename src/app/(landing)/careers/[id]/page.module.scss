@@ -1,0 +1,92 @@
+@use "../../../../styles/use/landing" as l;
+
+.bg {
+  @include l.abs-fill;
+  @include l.abs-top-left;
+  overflow: hidden;
+  z-index: -1;
+
+  &::after {
+    content: '';
+    @include l.abs-fill;
+    top: -25vh;
+    left: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, l.$background 70%), url("../../../../../public/misc/noise.svg") center no-repeat;
+    rotate: 15deg;
+    opacity: .2;
+  }
+}
+
+#article {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  padding: 4rem 25%;
+  width: 100%;
+
+  & > header {
+    text-align: center;
+
+    & > h1 {
+      font-size: 2.5rem;
+      margin: 0 0 1.5rem;
+    }
+
+    & > section {
+      color: l.$light-gray;
+      font-size: 1.25rem;
+      font-style: normal;
+
+      & > span {
+        margin-inline:.5rem;
+      }
+    }
+  }
+
+  & > h2 {
+    width: 100%;
+    text-align: start;
+    margin: 1rem 0 0;
+
+    & > a {
+      color: l.$l-purple;
+    }
+  }
+
+  & > ul {
+    color: l.$light-gray;
+    margin-right: auto;
+  }
+
+  & > p {
+    color: l.$light-gray;
+
+    &:last-child {
+      width: min(100%, 25rem);
+      margin-right: auto;
+    }
+  }
+}
+
+@mixin mk-address__icon($name, $icon, $scale: 1) {
+  ##{$name} {
+    font-weight: bold;
+  }
+
+  ##{$name}::before {
+    content: '';
+    display: inline-block;
+    @include l.size(1.5rem);
+    margin-right: .25rem;
+    translate: 0 .25rem;
+    background: url("../../../../../public/icons/#{$icon}.svg") center no-repeat;
+    transform: translateY(.1rem);
+    @content;
+  }
+}
+
+@include mk-address__icon('place', 'world');
+
+@include mk-address__icon('hours', 'clock') {
+  @include l.size(2);
+}

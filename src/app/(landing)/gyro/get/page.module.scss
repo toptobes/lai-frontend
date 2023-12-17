@@ -1,0 +1,279 @@
+@use "src/styles/use/landing" as l;
+
+.bg {
+  @include l.abs-fill;
+  @include l.abs-top-left;
+  overflow: hidden;
+  $bg: &;
+
+  &::after {
+    content: '';
+    @include l.abs-fill;
+    top: -15vh;
+    left: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, l.$background 70%), url("../../../../../public/misc/noise.svg") center no-repeat;
+    rotate: 25deg;
+    opacity: .2;
+  }
+
+  &__spot {
+    position: absolute;
+    background: radial-gradient(ellipse at center, l.$d-purple, transparent 70%);
+    @include l.abs-center-y;
+    top: 0;
+  }
+
+  &__spot-1 {
+    @extend #{$bg}__spot;
+    transform: translateX(-10rem) rotate(20deg);
+    @include l.size(20rem, 40rem);
+    opacity: .5;
+  }
+
+  &__spot-2 {
+    @extend #{$bg}__spot;
+    transform: translate(10rem, 12.5rem) rotate(-20deg);
+    @include l.size(15rem, 20rem);
+    opacity: .3;
+  }
+}
+
+#main {
+  display: flex;
+  flex-flow: column nowrap;
+  width: 100vw;
+  align-items: center;
+  gap: 5rem;
+  padding: 4rem 0;
+}
+
+.slogan {
+  position: relative;
+
+  & > h2 {
+    font-size: 2.25rem;
+    text-align: center;
+    white-space: nowrap;
+    filter: drop-shadow(0 .15rem .25rem rgba(0, 0, 0, 0.5));
+    margin: 0;
+
+    @media screen and (max-width: l.$nav-break-2) {
+      font-size: 7.5vw;
+    }
+
+    & > mark {
+      background: linear-gradient(-20deg, l.$d-purple, l.$l-purple 50%);
+      background-clip: text;
+      color: transparent;
+    }
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    @include l.size(.3rem, 5.3rem);
+    bottom: -.1rem;
+    left: 6.6rem;
+    background: l.$d-purple;
+    border-radius: .1em;
+    filter: drop-shadow(0 .15rem .25rem rgba(0, 0, 0, 0.5));
+
+    @media screen and (max-width: l.$nav-break-2) {
+      left: 22vw;
+      width: 17.25vw;
+    }
+
+    @media screen and (not (prefers-reduced-motion)) {
+      animation: gyro-underline-appear 1000ms 100ms ease forwards;
+    }
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+}
+
+@keyframes gyro-underline-appear {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.cards {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 2rem;
+  padding-inline: 3rem;
+}
+
+.card {
+  width: 22rem;
+  background: l.gray(40, 0.33);
+  backdrop-filter: blur(1px);
+  border-radius: 20px;
+  padding: 1rem 1.25rem;
+  box-shadow: inset .1rem .1rem .75rem 0 l.gray(55, 0.5), .25rem .25rem .5rem 0 l.gray(14, 0.4);
+  transform: translateY(5rem);
+  opacity: 0;
+
+  & > header > h1 {
+    text-transform: uppercase;
+    margin-block: .5rem;
+    font-size: 1.35rem;
+    letter-spacing: .05rem;
+  }
+
+  & > header > h2 {
+    margin-block: 1rem 1.25rem;
+
+    & > span:nth-child(1) {
+      font-size: 2.5rem;
+    }
+
+    & > span:nth-child(2) {
+      font-size: 2.5rem;
+    }
+
+    & > span:nth-child(3) {
+      font-size: 1rem;
+      font-weight: normal;
+    }
+  }
+
+  & > ul {
+    list-style-type: none;
+    padding: 0;
+
+    & > li {
+      margin-top: 1.25rem;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      white-space: pre;
+      font-size: 1.1rem;
+      height: 1.8rem;
+
+      &::before {
+        content: '';
+        margin-right: .5rem;
+        display: inline-block;
+        @include l.size(1.5rem);
+      }
+
+      & > i {
+        @include l.size(1.5rem);
+        background: url("../../../../../public/icons/info.svg") center no-repeat;
+        margin-left: auto;
+        filter: invert(100%);
+      }
+    }
+  }
+
+  & > footer {
+    margin-block: 1.75rem -.25rem;
+
+    & > a {
+      @include l.size(3.5rem, 100%);
+      border-radius: 12px;
+      font-size: 1.25rem;
+      transition: box-shadow 100ms, scale 100ms;
+      cursor: pointer;
+      display: block;
+      text-align: center;
+      line-height: 3.5rem;
+
+      @include l.on-interaction {
+        scale: 1.025;
+      }
+    }
+
+    & > p {
+      transform: translateY(.4rem);
+      text-align: center;
+      color: l.$light-gray;
+      font-style: italic;
+      font-size: .9rem;
+    }
+  }
+
+  &__0 {
+    @extend .card;
+
+    @media screen and (not (prefers-reduced-motion)) {
+      animation: slide-fade-up 800ms 100ms ease forwards;
+    }
+
+    & > ul > li::before {
+      background: url("../../../../../public/icons/circle-check.svg") center no-repeat;
+    }
+
+    & > footer > a {
+      background: transparent;
+      border: 2px solid #57A056;
+
+      @include l.on-interaction {
+        $shadow: 0 0 10px 5px rgb(87, 160, 86, .2);
+        box-shadow: $shadow, inset $shadow;
+      }
+    }
+  }
+
+  &__1 {
+    @extend .card;
+    translate: 0 -.05rem;
+
+    @media screen and (not (prefers-reduced-motion)) {
+      animation: slide-fade-up 800ms 250ms ease forwards;
+    }
+
+    & > ul > li::before {
+      background: url("../../../../../public/icons/4-pt-star.svg") center no-repeat;
+      filter: invert(46%) sepia(69%) saturate(482%) hue-rotate(168deg) brightness(93%) contrast(88%);
+    }
+
+    & > footer > a {
+      background: linear-gradient(150deg, #6398D7 33%, #3852AD);
+
+      @include l.on-interaction {
+        box-shadow: 0 0 10px 5px rgb(99, 152, 215, .2);
+      }
+    }
+  }
+
+  &__2 {
+    @extend .card;
+
+    @media screen and (not (prefers-reduced-motion)) {
+      animation: slide-fade-up 800ms 400ms ease forwards;
+    }
+
+    & > ul > li {
+      &::before {
+        background: url("../../../../../public/icons/4-pt-star.svg") center no-repeat;
+        filter: invert(48%) sepia(16%) saturate(1604%) hue-rotate(218deg) brightness(95%) contrast(85%);
+      }
+
+      &:last-child::before {
+        filter: invert(78%) sepia(11%) saturate(1933%) hue-rotate(20deg) brightness(91%) contrast(86%);
+      }
+    }
+
+    & > footer > a {
+      background: transparent;
+      border: 2px solid #8863D7;
+
+      @include l.on-interaction {
+        $shadow: 0 0 10px 5px rgb(136, 99, 215, .2);
+        box-shadow: $shadow, inset $shadow;
+      }
+    }
+  }
+}
+
+@keyframes slide-fade-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

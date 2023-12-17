@@ -1,0 +1,111 @@
+@use "src/styles/use/landing" as l;
+
+@mixin text-styles {
+  font-weight: bold;
+  color: l.$light-gray;
+  text-transform: capitalize;
+}
+
+#nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-inline: 22%;
+  padding-top: .75rem;
+  justify-content: space-between;
+  z-index: 100;
+  @include text-styles;
+
+  @media screen and (max-width: l.$nav-break-1) {
+    padding-inline: 1rem;
+  }
+}
+
+.nav-link-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+
+  @media screen and (max-width: l.$nav-break-1) {
+    gap: 1rem;
+  }
+
+  @media screen and (max-width: l.$nav-break-2) {
+    :not(:first-child) {
+      display: none;
+    }
+  }
+}
+
+a.current {
+  color: l.$l-purple;
+}
+
+@mixin account-btn--highlighted($alpha) {
+  $shadow: 0 0 10px 5px rgba(136, 99, 215, $alpha);
+  border: 1px solid l.$l-purple;
+  box-shadow: $shadow, inset $shadow;
+}
+
+.account-btn {
+  padding: .75rem 1rem;
+  @include text-styles;
+  background-color: transparent;
+  border: 1px solid l.$d-purple;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border 150ms ease, box-shadow 150ms ease;
+  position: relative;
+
+  @include l.on-interaction {
+    @include account-btn--highlighted(.12);
+  }
+}
+
+#account-btn__account {
+  @extend .account-btn;
+
+  //@include l.on-interaction {
+  //  &::before {
+  //    border: 1px solid l.$l-purple;
+  //    box-shadow: $shadow;
+  //    left: .75rem;
+  //  }
+  //}
+
+  //&::before {
+  //  content: '';
+  //  position: absolute;
+  //  left: calc(100% - 1.75rem);
+  //  top: -.25rem;
+  //  height: .5rem;
+  //  width: 1rem;
+  //  background-color: l.$background;
+  //  transition: left 250ms ease-in-out, border 250ms ease-in-out;
+  //  border: 1px solid l.$d-purple;
+  //  border-radius: 3px;
+  //}
+}
+
+#account-btn__login {
+  @extend .account-btn;
+  text-transform: none;
+  color: l.gray(220);
+  @include account-btn--highlighted(.15);
+  background: linear-gradient(to top right, l.$l-purple 10%, color-mix(in srgb, l.$d-purple, l.$l-purple 50%));
+  white-space: nowrap;
+}
+
+#home-btn {
+  transform: translateY(.135rem); // Aligns 'LindauerAI' text w/ other links
+
+  @media screen and (max-width: l.$nav-break-1) {
+    img {
+      display: none;
+    }
+    background: url("../../../../public/logos/logo-small.svg") center no-repeat;
+    @include l.size(2.5rem);
+    transform: translateY(0);
+  }
+}

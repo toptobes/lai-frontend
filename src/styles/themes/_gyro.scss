@@ -1,0 +1,10 @@
+@use "shared" as *;
+@forward "shared";
+
+[data-theme="dark"] {
+  --gyro-background: rgb(33, 34, 40);
+  --gyro-nav-bg: rgb(29, 28, 28);
+  --gyro-sidebar-bg: rgb(32, 32, 32);
+  --gyro-selected: rgb(56, 59, 65);
+  --gyro-chat: rgb(38, 39, 47);
+}

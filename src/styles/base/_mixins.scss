@@ -1,0 +1,66 @@
+@mixin size($height, $width: $height) {
+  height: $height;
+  width: $width;
+}
+
+@mixin on-interaction($selector: '', $combinators: '', $prefix-self: true) {
+  @if ($prefix-self) {
+    &#{$selector}:hover #{$combinators}, &#{$selector}:active #{$combinators}, &#{$selector}:focus, &#{$selector}:focus-within #{$combinators} {
+      @content;
+    }
+  } @else {
+    #{$selector}:hover #{$combinators}, #{$selector}:active #{$combinators}, #{$selector}:focus, #{$selector}:focus-within #{$combinators} {
+      @content;
+    }
+  }
+}
+
+@mixin triangle($height, $sides, $color) {
+  border-left: $sides solid transparent;
+  border-right: $sides solid transparent;
+  border-bottom: $height solid $color;
+}
+
+@mixin abs-center-y {
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+}
+
+@mixin abs-center-x {
+  top: 0;
+  bottom: 0;
+  margin-block: auto;
+}
+
+@mixin abs-top-left {
+  top: 0;
+  left: 0;
+}
+
+@mixin abs-fill {
+  position: absolute;
+  @include size(100%);
+}
+
+@mixin hide-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@mixin clip-text-line {
+  overflow-x: clip;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin variable($prop, $bp, $small, $large) {
+  #{$prop}: $small;
+
+  @media (min-width: $bp) {
+    #{$prop}: $large;
+  }
+}

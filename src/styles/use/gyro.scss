@@ -1,0 +1,14 @@
+@import "shared";
+
+$background: var(--gyro-background);
+$sidebar-bg: var(--gyro-sidebar-bg);
+$selected: var(--gyro-selected);
+$nav-bg: var(--gyro-nav-bg);
+$chat: var(--gyro-chat);
+
+$less-selected: color-mix(in srgb, $selected 80%, black);
+
+$nav-height: 4.75rem;
+$sb-width: 20rem;
+
+$sb-break: 768px;

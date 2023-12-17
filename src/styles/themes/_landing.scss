@@ -1,0 +1,6 @@
+@use "shared" as *;
+@forward "shared";
+
+[data-theme="dark"] {
+  --landing-background: rgb(21, 22, 24);
+}

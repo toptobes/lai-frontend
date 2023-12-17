@@ -1,0 +1,42 @@
+@use "src/styles/use/shared" as s;
+
+@mixin hide-btn-segment($selector, $multi) {
+  &::#{$selector} {
+    content: '';
+    position: absolute;
+    @include s.size(.35rem, 1.25rem);
+    @include s.abs-center-y;
+    background-color: s.gray(175);
+    border-radius: .35rem;
+    translate: ($multi * .5rem) 0;
+    transition: 100ms;
+  }
+
+  .hidden > &::#{$selector} {
+    transform: translateY(.25rem) rotate($multi * -10deg);
+  }
+
+  :not(.hidden) > &:hover::#{$selector} {
+    transform: translateY(-.25rem) rotate($multi * 10deg);
+  }
+}
+
+.button {
+  position: absolute;
+  bottom: .5rem;
+  @include s.size(.75rem, 2.5rem);
+  background-color: transparent;
+  cursor: pointer;
+  @include hide-btn-segment('before', -1);
+  @include hide-btn-segment('after', 1);
+  transition: transform 500ms, opacity 100ms;
+  opacity: .2;
+
+  &:hover {
+    opacity: .6;
+  }
+
+  .hidden > & {
+    transform: translateY(1.75rem);
+  }
+}

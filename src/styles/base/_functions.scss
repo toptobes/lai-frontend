@@ -1,0 +1,3 @@
+@function gray($amount, $alpha: 1) {
+  @return rgba($amount, $amount, $amount, $alpha);
+}

@@ -1,0 +1,68 @@
+@use "../../../../../styles/use/landing" as l;
+
+.bg {
+  @include l.abs-fill;
+  @include l.abs-top-left;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    @include l.abs-fill;
+    top: -25vh;
+    left: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, l.$background 70%), url("../../../../../../public/misc/noise.svg") center no-repeat;
+    rotate: 15deg;
+    opacity: .2;
+  }
+}
+
+#article {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  padding: 4rem 25%;
+  width: 100%;
+
+  & > header {
+    text-align: center;
+
+    & > h1 {
+      font-size: 2.5rem;
+      margin: 0 0 1.5rem;
+    }
+
+    & > address {
+      color: l.$light-gray;
+      font-size: 1.25rem;
+      font-style: normal;
+
+      & > a {
+        margin-inline: 1rem;
+      }
+    }
+  }
+
+  & > h2 {
+    width: 100%;
+    text-align: start;
+    margin: 1rem 0 0;
+  }
+
+  & > p {
+    color: l.$light-gray;
+  }
+}
+
+@mixin mk-address__icon($name) {
+  ##{$name}::before {
+    content: '';
+    display: inline-block;
+    @include l.size(1.5rem);
+    margin-right: .25rem;
+    translate: 0 .25rem;
+    background: url("../../../../../../public/icons/#{$name}.svg") center no-repeat;
+  }
+}
+
+@include mk-address__icon('email');
+@include mk-address__icon('phone');

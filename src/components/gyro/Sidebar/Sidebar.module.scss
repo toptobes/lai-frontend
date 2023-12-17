@@ -1,0 +1,86 @@
+@use "src/styles/use/gyro" as g;
+
+.sidebar {
+  position: fixed;
+  @include g.size(100vh, g.$sb-width);
+  background-color: g.$sidebar-bg;
+  z-index: 20;
+  border-right: 1px solid g.$d-purple;
+  box-shadow: 5px 0 10px rgba(76, 55, 206, 0.25);
+  border-radius: 0 30px 30px 0;
+
+  &--sliding {
+    transition: width ease-in-out 250ms;
+
+    @include g.on-interaction() {
+      width: 40rem;
+    }
+  }
+
+  @media (max-width: g.$sb-break) {
+    display: none;
+  }
+}
+
+.header {
+  height: g.$nav-height;
+  border-bottom: 1px solid g.$d-purple;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+  transition: filter 100ms;
+
+  & > a:first-of-type {
+    cursor: pointer;
+    background: url("../../../../public/logos/logo-small.svg") no-repeat center;
+    @include g.size(2.5rem);
+  }
+
+  & > span:first-of-type {
+    translate: 0 .25rem; // Gives the GYRO text a more balanced feel
+    filter: drop-shadow(0 0 .25rem rgb(200, 200, 200, .35));
+    font-size: 2rem;
+    letter-spacing: .5rem;
+  }
+}
+
+.children {
+  @include g.size(100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: .75rem;
+  container-type: inline-size;
+  @include g.hide-scrollbar;
+  overflow-y: scroll;
+  position: relative;
+}
+
+.plan {
+  font-size: .75rem;
+  translate: -1rem -.5rem;
+  padding: .5rem .6rem;
+  border-radius: 12px;
+  letter-spacing: .2rem;
+  text-transform: uppercase;
+
+  & > span {
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.25));
+  }
+
+  &--institutional {
+    @extend .plan;
+    background: linear-gradient(45deg, #4938AD, #8863D7);
+  }
+
+  &--professional {
+    @extend .plan;
+    background: linear-gradient(45deg, #2978A5, #7CAEBE);
+  }
+
+  &--basic {
+    @extend .plan;
+    background: linear-gradient(45deg, #347233, #87B786);
+  }
+}
