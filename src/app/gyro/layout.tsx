@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import { Nav } from '~/components/gyro/Nav';
 import { Sidebar } from '~/components/gyro/Sidebar';
-import { GyroPageCtxProvider } from '~/contexts/gyro/GyroPageCtx';
 import styles from './layout.module.scss';
+import { GyroPageCtxProvider } from '~/lib/gyro/contexts/GyroPageCtx';
 
 interface Props {
   children: ReactNode,

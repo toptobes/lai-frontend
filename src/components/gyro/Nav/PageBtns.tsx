@@ -7,7 +7,7 @@ import dashboardSVG from 'public/icons/dashboard.svg';
 import chatbotSVG from 'public/icons/chatbot.svg';
 import React, { useContext } from 'react';
 import Link from 'next/link';
-import { GyroPage, GyroPageCtx } from '~/contexts/gyro/GyroPageCtx';
+import { GyroPage, GyroPageCtx } from '~/lib/gyro/contexts/GyroPageCtx';
 
 export const PageBtns = () => <>
   <PageBtn page="dash"/>

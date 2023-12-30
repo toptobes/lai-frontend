@@ -1,0 +1,2409 @@
+openapi: 3.1.0
+info:
+  title: Lindauer AI Gyro Docs
+  x-logo:
+    url: 'https://lindauerai.com/images/lindauer_ai_dark_logo_full.svg'
+    backgroundColor: '#161719'
+
+
+  description: |-
+    # Getting Started
+    
+    Gyro is the premiere educational chatbot. Students will use chatbots regardless of whether you block them, so we decided to make the highest performing and most responsible AI system, ever.
+    
+    These are the docs to both the internal and external Gyro API. Before we get started, let's explain what these different tags are.
+    
+    ## Internal
+    
+    Internal API calls are for use with the Gyro website. These are the calls that the website makes to the backend to perform actions.
+    These are not meant to be used by the user, but rather by the website.
+    Though if you feel like making a better version of our website, by all means, use these endpoints (contact us too at support@lindauerai.com / careers@lindauerai.com)!
+    
+    ### User
+    These are the calls that the user makes to the backend to perform actions.
+    By `user` we mean a student or teacher, not an institution.
+    However, a student can only access `user` and not `teacher` endpoints.
+    
+    
+    ### Institution
+    These are the calls that the institution makes to the backend to perform actions within the website.
+    They include getting the institution dashboard statistics, creating API keys, and maybe more in the future.
+    
+    ### Teacher
+    
+    These are the calls that the teacher makes to the backend to perform actions within the website.
+    Currently, this is only for classification, but in the future, it may include more.
+    
+    
+    ### Site
+    
+    These are the calls that the website makes to the backend to perform actions within the website, *without* a user account.
+    
+    
+    ### Admin
+    
+    These endpoints are for Lindauer AI employees only. They are used to see statistics about the backend, and to perform actions that are not anyone else.
+    
+    
+    ## External
+    
+    External API calls are for use with API keys. These are the calls that the API key makes to the backend to perform actions.
+    
+    ### Institution
+    These are the calls that the institution makes to the backend to perform actions. There are no other types of external endpoints.
+    
+    
+    
+    Happy coding!
+    
+    - The Lindauer AI Team
+
+  termsOfService: https://lindauerai.com/terms.html/
+  contact:
+    email: support@lindauerai.com
+  version: 1.0.1
+servers:
+  - url: https://gyro-405519.uc.r.appspot.com
+tags:
+  - name: internal/user
+    description: Internal documentation about API calls for user functionality.
+  - name: internal/institution
+    description: Internal API calls for handling institution accounts
+  - name: internal/teacher
+    description: Internal API calls for handling teacher accounts (aka Gyro classification calls)
+  - name: internal/site
+    description: External API calls for use with the Gyro website.
+  - name: internal/admin
+    description: Internal API calls for Lindauer AI employees only.
+  - name: external/institution
+    description: External API calls for use with API keys.
+
+paths:
+  /internal/user/:
+    post:
+      tags:
+        - internal/user
+      summary: Create a user.
+      description: Creates a user with the given authentication information pulled from the identity provider and a gender variable.
+
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gender:
+                  type: string
+                  enum: [ 'male', 'female', 'x' ]
+            examples:
+              Example 1:
+                value:
+                  gender: "female"
+
+      responses:
+        '201':
+          description: Entity created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the user.
+                  email:
+                    type: string
+                    description: Entity's email.
+                  gender:
+                    type: string
+                    description: Entity's gender.
+                    enum: [ 'male', 'female', 'x' ]
+                  institution_name:
+                    type: string
+                    description: Name of the institution (if applicable, i.e. is a user/teacher).
+                  created_at:
+                    type: string
+                    description: ISO 8601 timestamp of when the entity was created.
+
+
+              example:
+                name: 'George Washington'
+                email: 'g.w@presidents.gov'
+                gender: 'female'
+                institution_name: 'Lindauer AI'
+                created_at: '2021-10-22 18:00:00.000'
+        '400':
+          description: Missing a passed parameter or body variable.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Entity oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+    get:
+      tags:
+        - internal/user
+      summary: Get an entity's basic data.
+      description: Gets `name` and `role`, the basic informmation of the user/institution (institution role will be `institution`).
+
+      parameters:
+        - name: Authorization
+          in: header
+          description: Entity's ID token. Always required.
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        '200':
+          description: Entity fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the user.
+                  role:
+                    type: string
+                    description: Role of the user, either `user-none`, `user-basic`, `user-pro`, `teacher`, `institution`, `admin`. Admin is for Lindauer AI employees only.
+                    enum: [ 'user-none', 'user-basic', 'user-pro', 'teacher', 'institution', 'admin' ]
+                  institution_name:
+                    type: string
+                    description: Name of the institution (if applicable, i.e. is a user/teacher).
+              example:
+                name: 'George Washington'
+                institution_name: 'Martian University'
+                role: 'user-basic'
+        '400':
+          description: Missing a passed parameter or body variable.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Entity oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+  /internal/user/profile/:
+    get:
+      tags:
+        - internal/user
+      summary: Get an entity's profile.
+      description: Gets `name`, `email`, `gender`, and `created_at` date of the user/institution (institution gender will be `x`).
+
+      parameters:
+        - name: Authorization
+          in: header
+          description: Entity's ID token. Always required.
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        '200':
+          description: User profile fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the user.
+                  email:
+                    type: string
+                    description: Entity's email.
+                  gender:
+                    type: string
+                    description: Entity's gender.
+                    enum: [ 'male', 'female', 'x' ]
+                  created_at:
+                    type: string
+                    description: ISO 8601 timestamp of when the entity was created.
+
+              example:
+                name: 'George Washington'
+                email: 'g.w@presidents.gov'
+                gender: 'female'
+                created_at: '2021-10-22 18:00:00.000'
+                role: 'user-basic'
+        '400':
+          description: Missing a passed parameter or body variable.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Entity oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+    put:
+      tags:
+        - internal/user
+      summary: Edit user profile.
+      description: Edit a user's profile information. If not changing all the fields, just pass the old values in for the fields that stay the same.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                new_name:
+                  type: string
+                new_gender:
+                  type: string
+                  enum: [ 'male', 'female', 'x' ]
+            examples:
+              Example 1:
+                value:
+                  new_name: 'Bill Stevens'
+                  new_gender: "x"
+      responses:
+        '200':
+          description: User edited successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Missing a passed parameter or body variable.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+
+
+  /internal/gyro/conversations/new/:
+    post:
+      tags:
+        - internal/user
+      summary: Create conversation.
+      description: Create a conversation with Gyro for a specific user.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - conversation_name
+              properties:
+                conversation_name:
+                  type: string
+            examples:
+              Example 1:
+                value:
+                  conversation_name: "Math Help"
+
+      responses:
+        '201':
+          description: Conversation created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Missing a passed parameter or body variable.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have a Gyro plan or is an institution.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+  /internal/gyro/conversations/{conversation_id}/:
+    put:
+      tags:
+        - internal/user
+      summary: Rename conversation.
+      description: Rename an existing conversation to something else.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+        - name: conversation_id
+          in: header
+          description: UUID of the conversation to ask the message in.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - new_conversation_name
+              properties:
+                new_conversation_name:
+                  type: string
+                  description: New name for the conversation.
+            examples:
+              Example 1:
+                value:
+                  message: 'Chemistry work'
+      responses:
+        '200':
+          description: Conversation renamed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have a gyro plan or is an institution.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+    delete:
+      tags:
+        - internal/user
+      summary: Delete conversation.
+      description: Delete an existing conversation.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+        - name: conversation_id
+          in: header
+          description: UUID of the conversation to ask the message in.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Conversation deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have a gyro plan or is an institution.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+  /internal/gyro/conversations/:
+    get:
+      tags:
+        - internal/user
+      summary: Get conversations.
+      description: Get a list of conversations for a user, sorted by last used timestamp. This is used to populate the conversation list on the frontend.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Conversations fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  conversations:
+                    type: array
+                    description: List of conversations.
+                    items:
+                      $ref: '#/components/schemas/Conversation'
+                      description: Conversation object. See below for schema.
+              example:
+                conversations:
+                  - conversation_id: "3bb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c"
+                    conversation_name: "Math Help"
+                    last_used: "2022-10-22 18:00:00.000"
+                  - conversation_id: "9cb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c"
+                    conversation_name: "Music Theory"
+                    last_used: "2023-09-27 18:00:00.000"
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have appropriate credentials.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+
+
+  /internal/gyro/documents/{conversation_id}/:
+    post:
+      tags:
+        - internal/user
+      summary: Upload document.
+      description: Upload text as a document to perform queries on.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+        - name: conversation_id
+          in: path
+          description: UUID of the conversation as a string.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - primary_file
+                - source_name
+              properties:
+                primary_file:
+                  type: string
+                  format: binary
+                  description: Upload a file (.txt, .docx, or .pdf).
+                source_name:
+                  type: string
+                  description: Filename of the document.
+                chunk_size:
+                  type: number
+                  description: Optional advanced feature to control how the RecursiveTextSplitter chunks each document by changing the size of each subdoc.
+                chunk_overlap:
+                  type: number
+                  description: Optional advanced feature to control how the RecursiveTextSplitter chunks each document by changing the overlap between subdocs.
+
+            examples:
+              Example 1:
+                value:
+                  source_name: "textbook.txt"
+
+
+      responses:
+        '200':
+          description: Document uploaded successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have a Gyro plan or is an institution.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+    get:
+      tags:
+        - internal/user
+      summary: List documents.
+      description: Get a list of documents for a user. This is used to populate the document list on the frontend and allow users to see what documents are being referred to in a conversation.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+        - name: conversation_id
+          in: path
+          description: Conversation ID to list documents from.
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Documents fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  documents:
+                    type: array
+                    description: List of documents.
+                    items:
+                      $ref: '#/components/schemas/DocumentInfo'
+                      description: Document object. See below for schema.
+              example:
+                documents:
+                  - source_name: "math_textbook_1.pdf"
+                    id: "3bb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c"
+                    file_size: 17
+                    download_link: 'https://storage.googleapis.com/gyro-storage/3bb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c/math_textbook_1.pdf'
+                  - source_name: "math_textbook_2.pdf"
+                    id: "9cd98b1f-a1c4-4b6f-bbb2-45cf48b7c33c"
+                    file_size: 25
+                    download_link: 'https://storage.googleapis.com/gyro-storage/3bb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c/math_textbook_2.pdf'
+
+        '204':
+          description: No documents found.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have appropriate credentials.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+  /internal/user/documents/{conversation_id}/{id}/:
+    delete:
+      tags:
+        - internal/user
+      summary: Delete a document.
+      description: Delete a document from a conversation and vectorstore.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+        - name: conversation_id
+          in: path
+          description: UUID of the conversation to ask the message in.
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: ID of the source to delete.
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Document deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have appropriate credentials (i.e. institution).
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+
+
+
+  /internal/gyro/conversations/{conversation_id}/messages/:
+    post:
+      tags:
+        - internal/user
+      summary: Send a message.
+      description: Send a message to Gyro and receive its response. This is NOT a stream, and is not preferable because the user will have to wait longer before reading.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+        - name: conversation_id
+          in: path
+          description: UUID of the conversation to ask the message in.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  description: Message text to send.
+                model:
+                  type: string
+                  description: Model to use for the message. Default is `gyro-1000` but a pro user can use `gyro-2000`. Will return 403 if the user does not have a pro plan but does have a basic plan. These will default to the latest models (which start at `gyro-1001` and `gyro-2001`, but will increase over time).
+                  enum: [ 'gyro-1000', 'gyro-2000' ]
+                n_sources:
+                  type: number
+                  description: Number of sources to use for the response. Default is 3, but can be any number between 0 and 50 (`gyro-1xxx`) and 0 and 25 (`'`gyro-2xxx`). Will throw a 500 error if out of bounds/
+                  minimum: 0
+                  maximum: 50
+                  default: 3
+
+            examples:
+              Example 1:
+                value:
+                  message: "How can I calculate sin(2*pi)?"
+                  model: "gyro-2000"
+
+      responses:
+        '200':
+          description: Message generated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    description: Gyro's response to the message provided.
+                  sources:
+                    type: array
+                    description: List of sources that the response was generated from.
+                    items:
+                      $ref: '#/components/schemas/Document'
+              example:
+                response: "To calculate sin(2*pi), look at the unit circle. As 2*pi is a full rotation, sin(2*pi) = 0."
+                sources:
+                  - source_name: "unit_circle.pdf"
+                    source_value: "So here's something good to note: 2*pi is a full rotation around a circle and equivalent to 0"
+                    download_uri: "https://storage.googleapis.com/gyro-storage/3bb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c/unit_circle.pdf"
+                  - source_name: "trig.pdf"
+                    source_value: "sin(2*pi) = 0"
+                    download_uri: "https://storage.googleapis.com/gyro-storage/3bb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c/trig.pdf"
+
+
+
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have a Gyro plan or is an institution.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+    put:
+      tags:
+        - internal/user
+      summary: Edit a message.
+      description: 'Edits a message in the conversation history. IMPORTANT: Also removes all subsequent messages and generates/returns a new response, like before.'
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+        - name: message_id
+          in: header
+          description: UUID of the message to edit.
+          required: true
+          schema:
+            type: string
+        - name: conversation_id
+          in: path
+          description: UUID of the conversation to ask the message in.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - new_message
+              properties:
+                new_message:
+                  type: string
+                  description: Message text to replace the old message.
+                model:
+                  type: string
+                  description: Model to use for the message. Default is `gyro-1000` but a pro user can use `gyro-2000`. Will return 403 if the user does not have a pro plan but does have a basic plan. These will default to the latest models (which start at `gyro-1001` and `gyro-2001`, but will increase over time).
+                  enum: [ 'gyro-1000', 'gyro-2000' ]
+
+            examples:
+              Example 1:
+                value:
+                  new_message: "How can I peel a banana properly"
+                  model: "gyro-2000"
+      responses:
+        '200':
+          description: Message generated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    description: Gyro's response to the message provided.
+                  source_names:
+                    type: array
+                    description: List of source names that the response was generated from.
+                    items:
+                      type: string
+                  source_values:
+                    type: array
+                    description: List of text excerpts that the response was generated from.
+                    items:
+                      type: string
+              example:
+                response: "To peel a banana properly, you should start by peeling the top of the banana. Then, peel the bottom of the banana. Finally, peel the sides of the banana."
+                source_names: [ 'banana_peeling_guide.pdf', 'banana_peeling_guide.pdf', 'banana_peeling_guide.pdf' ]
+                source_values: [ 'To peel a banana properly, you should start by peeling the top of the banana.', 'Then, peel the bottom of the banana.', 'Finally, peel the sides of the banana.' ]
+
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have a Gyro plan or is an institutional account.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+    delete:
+      tags:
+        - internal/user
+      summary: Delete a message.
+      description: Send a message to Gyro and recieve its response.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+        - name: conversation_id
+          in: path
+          description: UUID of the conversation to delete a message in.
+          required: true
+          schema:
+            type: string
+        - name: message_id
+          in: header
+          description: Message UUID.
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Message deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User is not a regular user (i.e. institution).
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+    get:
+      tags:
+        - internal/user
+      summary: Get messages.
+      description: Get a list of messages and their metadata for a user. This is used to populate the message list on the frontend and allow users to see what messages are in a conversation.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+        - name: conversation_id
+          in: path
+          description: Conversation ID to list documents from.
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  messages:
+                    type: array
+                    description: List of messages.
+                    items:
+                      $ref: '#/components/schemas/Message'
+                      description: Message object. See below for schema.
+              example:
+                messages:
+                  - id: "6fff9ba7-3e74-4fd9-bc79-617f422e5877"
+                    body: "Hello, how are you?"
+                    role: "human"
+                    created: "2023-12-11T14:30:00Z"
+                    category: "other"
+                    cheat_guess: 0.443
+                  - id: "defed0bf-5a43-426c-8367-dd97891f59ea"
+                    body: "I'm doing well, thanks!"
+                    role: "ai"
+                    created: "2023-12-11T14:35:00Z"
+                    category: "humanities"
+                    cheat_guess: 0.122
+
+        '204':
+          description: No messages found.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have appropriate credentials.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+
+  /internal/gyro/conversations/{conversation_id}/messages/stream/?model={model}/:
+    post:
+      tags:
+        - internal/user
+      summary: Send a message for streaming.
+      description: Sends a message. The stream SSE will be returned.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+        - name: conversation_id
+          in: path
+          description: UUID of the conversation to ask the message in.
+          required: true
+          schema:
+            type: string
+        - name: model
+          in: query
+          description: Model name (optional). Use `gyro-1000` or `gyro-2000` for the latest models.
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  description: Message text to send.
+                n_sources:
+                  type: number
+                  description: Number of sources to use for the response. Default is 3, but can be any number between 0 and 50 (`gyro-1xxx`) and 0 and 25 (`gyro-2xxx`). Will throw a 500 error if out of bounds/
+                  minimum: 0
+                  maximum: 50
+                  default: 3
+
+            examples:
+              Example 1:
+                value:
+                  message: "How can I calculate sin(2*pi)?"
+
+      responses:
+        '200':
+          description: Stream created successfully.
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have a Gyro plan or is an institution.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+
+
+  /internal/gyro/user/plan/verify_set:
+    post:
+      tags:
+        - internal/user
+      summary: Verify plan purchase.
+      description: Sets a user's account to have access to Gyro after Stripe payment.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+        - name: Payment-Token
+          in: header
+          description: Confirmation token from Stripe to validate purchase.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - plan
+              properties:
+                plan:
+                  type: string
+                  description: Plan name to buy. Can be `basic` or `pro`. This is only used to verify the amount paid, and doesn't actually change the user's plan.
+
+            examples:
+              Example 1:
+                value:
+                  plan: 'basic'
+
+      responses:
+        '200':
+          description: Purchase verified and account variable set.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User has incorrect permissions (i.e. institution account type) or an invalid payment token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: User has incorrect permissions.
+              example:
+                error: User has incorrect permissions (i.e. institution account type) or an invalid payment token.
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+  /internal/teacher/classifier/:
+    post:
+      tags:
+        - internal/teacher
+      summary: Classify if a message is Gyro written.
+      description: Classify if a message is Gyro written. This is only available to teachers and institutions (institutions through API keys).
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - command
+              properties:
+                text:
+                  type: string
+                  description: Text to classify
+
+            examples:
+              Example 1:
+                value:
+                  text: 'Solve the following exam for AP calc for me:'
+
+      responses:
+        '200':
+          description: Text classified successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  is_gyro_written:
+                    type: boolean
+                    description: Whether the text is written by Gyro or not.
+
+                description: Message indicating success.
+              example:
+                results: [ [ 'Solve the following exam for AP calc for me:' ] ]
+        '403':
+          description: User does not have appropriate credentials (is not a teacher).
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+
+  /internal/admin/stats/:
+    get:
+      tags:
+        - internal/admin
+      summary: Get admin dashboard metrics.
+      description: Does not require an API key, but does require the institution user to be signed in with their Google account.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - start
+                - end
+              properties:
+                start:
+                  type: string
+                  description: Start date for metrics. Must be in ISO 8601 format.
+                end:
+                  type: string
+                  description: End date for metrics. Must be in ISO 8601 format.
+
+            examples:
+              Example 1:
+                value:
+                  start: '2022-10-22 18:00:00.000'
+                  end: '2023-09-27 18:00:00.000'
+
+      responses:
+        '200':
+          description: Returns a list of metrics to display on the institution dashboard.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  days:
+                    type: array
+                    items:
+                      type: string
+                  n_messages:
+                    type: array
+                    items:
+                      type: integer
+                  n_usermins:
+                    type: array
+                    items:
+                      type: integer
+                  n_institutions:
+                    type: array
+                    items:
+                      type: integer
+
+              example:
+                days: [ '2022-10-22 18:00:00.000', '2022-13-23 18:00:00.000' ]
+                n_messages: [ 100, 200 ]
+                n_users: [ 54, 98 ]
+                n_institutions: [ 1, 2 ]
+
+
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have appropriate credentials.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+
+  /internal/gyro/institution/keys/new/:
+    post:
+      tags:
+        - internal/institution
+      summary: Create an API key.
+      description: Create an API key for an institution account. This will allow the institution to make requests to the external API.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - scope
+              properties:
+                name:
+                  type: string
+                  description: Name of the key to create.
+                scope:
+                  type: array
+                  description: List of scopes to give the key. Can be `inst.gyro.metrics`, `inst.gyro.history`, and/or `inst.gyro.classifier`.
+                  items:
+                    type: string
+                    enum: [ 'inst.gyro.metrics', 'inst.gyro.history', 'inst.gyro.classifier' ]
+                expires_in:
+                  type: number
+                  description: Number of days until the key expires. Default is 90, which means the key expires in 90 days.
+            examples:
+              Example 1:
+                value:
+                  name: 'My API key'
+                  scope: [ 'inst.gyro.metrics', 'inst.gyro.history' ]
+                  expires_in: 95
+
+      responses:
+        '200':
+          description: Key generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User is not an institution.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+  /internal/gyro/institution/keys/revoke/:
+    delete:
+      tags:
+        - internal/institution
+      summary: Revoke an API key.
+      description: Revoke an API key for an institution account. This will prevent the API key from being used to make requests to the external API. Requires a key ID (UUID) string.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+        - name: key_id
+          in: header
+          description: ID of the key to delete.
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Key revoked successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User is not an institution.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+  /internal/gyro/institution/keys/:
+    get:
+      tags:
+        - internal/institution
+      summary: Get API keys.
+      description: Returns key hints, names, uuids, created at dates, last used dates, and expiration dates.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: API keys fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  keys:
+                    type: array
+                    description: List of keys.
+                    items:
+                      $ref: '#/components/schemas/ApiKey'
+
+
+              example:
+                keys:
+                  - key_id: '3bb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c'
+                    name: 'My API key'
+                    created_at: '2021-10-22 18:00:00.000'
+                    last_used_at: '2022-10-22 18:00:00.000'
+                    expires_at: '2023-10-22 18:00:00.000'
+                    scope: [ 'inst.gyro.metrics', 'inst.gyro.history' ]
+                  - key_id: '7bb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c'
+                    name: 'Key 2'
+                    created_at: '2021-10-22 18:00:00.000'
+                    last_used_at: '2022-10-22 18:00:00.000'
+                    expires_at: '2023-10-22 18:00:00.000'
+                    scope: [ 'inst.gyro.metrics', 'inst.gyro.history', 'inst.gyro.classifier' ]
+        '204':
+          description: No keys found.
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have appropriate credentials.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+  /internal/gyro/institution/metrics/:
+    get:
+      tags:
+        - internal/institution
+      summary: Get dashboard metrics
+      description: Does not require an API key, but does require the institution user to be signed in with their Google account.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - start
+                - end
+              properties:
+                start:
+                  type: string
+                  description: Start date for metrics. Must be in ISO 8601 format.
+                end:
+                  type: string
+                  description: End date for metrics. Must be in ISO 8601 format.
+
+            examples:
+              Example 1:
+                value:
+                  start: '2022-10-22 18:00:00.000'
+                  end: '2023-09-27 18:00:00.000'
+
+      responses:
+        '200':
+          description: Returns a list of metrics to display on the institution dashboard.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metrics:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Statistic'
+                      description: Statistic objects. See bottom for details.
+
+              example:
+                - day: '2022-10-22 18:00:00.000'
+                  n_users: 1
+                  n_humanities_messages: 1
+                  n_humanities_cheating_messages: 1
+                  n_natural_sciences_messages: 1
+                  n_natural_sciences_cheating_messages: 1
+                  n_social_sciences_messages: 1
+                  n_social_sciences_cheating_messages: 1
+                  n_mathematics_messages: 1
+                  n_mathematics_cheating_messages: 1
+                  n_professional_messages: 1
+                  n_professional_cheating_messages: 1
+                  n_other_messages: 1
+                  n_other_cheating_messages: 1
+                - day: '2022-11-23 18:00:00.000'
+                  n_users: 35
+                  n_humanities_messages: 21
+                  n_humanities_cheating_messages: 2
+                  n_natural_sciences_messages: 98
+                  n_natural_sciences_cheating_messages: 2
+                  n_social_sciences_messages: 2
+                  n_social_sciences_cheating_messages: 2
+                  n_mathematics_messages: 0
+                  n_mathematics_cheating_messages: 2
+                  n_professional_messages: 87
+                  n_professional_cheating_messages: 2
+                  n_other_messages: 5
+                  n_other_cheating_messages: 2
+
+
+
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have appropriate credentials.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+  /internal/careers/:
+    get:
+      tags:
+        - internal/site
+      summary: Get all career info for frontend.
+      description: Does not require any parameters or authentication. Will be rate-limited by IP.
+
+      responses:
+        '200':
+          description: Careers fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobs:
+                    $ref: '#/components/schemas/JobSimple'
+                    description: Job objects. See bottom for details.
+                description: Message indicating success.
+              example:
+                - id: 1
+                  title_short: 'Software Engineer'
+                  location: 'San Francisco, CA'
+                - id: 2
+                  title_short: 'Machine Learning Engineer'
+                  location: 'New York, NY'
+        '403':
+          description: User is rate-limited
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+  /internal/careers/{job_id}/:
+    get:
+      tags:
+        - internal/site
+      summary: Get a job's info.
+      description: Uses the serial ID as a lookup to get job posting information.
+
+      parameters:
+        - name: job_id
+          in: path
+          description: Job ID.
+          required: true
+          schema:
+            type: number
+
+      responses:
+        '200':
+          description: Career fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: number
+                    description: Job ID.
+                  title_short:
+                    type: string
+                    description: Shortened job title.
+                  title_long:
+                    type: string
+                    description: Full job title.
+                  location:
+                    type: string
+                    description: Job location.
+                  description:
+                    type: string
+                    description: Job description.
+                  responsibilities:
+                    type: array
+                    description: Job responsibilities.
+                    items:
+                      type: string
+                  qualifications:
+                    type: array
+                    description: Job qualifications.
+                    items:
+                      type: string
+
+                description: Message indicating success.
+              example:
+                job_id: 1
+                title_short: 'Software Engineer'
+                title_long: 'Important Software Engineer'
+                location: 'San Francisco, CA'
+                description: 'We are looking for a software engineer to join our team.'
+                responsibilities: [ 'Write code', 'Test code', 'Deploy code' ]
+                qualifications: [ 'Bachelors degree', '2 years of experience' ]
+        '403':
+          description: User is rate-limited
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+  /internal/sales-info/:
+    get:
+      tags:
+        - internal/site
+      summary: Get current AI models.
+      description: Gets a list of AI model names, descriptions, capabilities, and tips for the frontend.
+
+      responses:
+        '200':
+          description: AI models fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  models:
+                    type: array
+                    description: Array of AI model names.
+                    items:
+                      $ref: '#/components/schemas/Model'
+                      description: AI model objects. See bottom for details.
+
+                description: Message indicating success.
+              example:
+                models:
+                  - name: 'Gyro-1000'
+                    description: 'Our main AI model.'
+                    capabilities: [ 'Can detect cheating', 'Can detect subject', 'Can detect message type' ]
+                    tips: [ 'Use this model for most cases' ]
+                  - name: 'Gyro-2000'
+                    description: 'A heavier version of our main AI model.'
+                    capabilities: [ 'Can detect cheating', 'Can detect subject' ]
+                    tips: [ 'Use this model if you want the best experience but load fewer documents.' ]
+        '403':
+          description: User is rate-limited
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+  /external/gyro/institution/query/:
+    post:
+      tags:
+        - external/institution
+      summary: Query user data.
+      description: |
+        Queries user data from a specific institution. Requires an API key with the `inst.gyro.history` scope. Returns a list of users and their data based on the command provided.
+
+        For proper use, check out these examples. It uses SQL queries to get data from the database.
+
+        ```postgresql
+        -- Count how many users there are in your institution
+        SELECT COUNT(*) FROM users;
+
+        -- Just see the first 5 messages from your institution
+        SELECT * FROM messages LIMIT 5;
+
+        -- Count how many messages have been sent by your institution
+        SELECT COUNT(*) FROM messages;
+
+        -- See the first 50 messages from a student named "Joe Smith" about mathematics. The preferred method is through email.
+        SELECT * FROM messages WHERE student_name='Joe Smith' AND subject='mathematics' LIMIT 50;
+
+        -- See the first 50 messages from a student with the email below, and messages that have a high likelihood of cheating.
+        SELECT * FROM messages WHERE student_email='joe.smith@myinst.edu' AND cheating_prob >= 0.7 LIMIT 50;
+
+        -- See the first 50 messages from a student with the email below, but only from the year 2023.
+        SELECT * FROM messages WHERE student_email='joe.smith@myinst.edu' AND date >= '2023-01-01'::timestamp AND date <= '2024-01-01'::timestamp LIMIT 50;
+        ```
+
+        TL;DR: SQL statements but with a few things removed so that the institution doesn't have to worry about things that much.
+
+      parameters:
+        - name: Authorization
+          in: header
+          description: API key. Always required for external endpoints.
+          required: true
+          schema:
+            type: string
+
+
+      # required string query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - command
+              properties:
+                command:
+                  type: string
+                  description: Command to run. For proper use, see the documentation.
+
+            examples:
+              Example 1:
+                value:
+                  command: SELECT message FROM messages WHERE student_email='joe.smith@myinst.edu' AND date >= '2023-01-01'::timestamp AND date <= '2024-01-01'::timestamp LIMIT 50;
+
+
+      responses:
+        '200':
+          description: Query successful.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    description: Rows that match the query command.
+                    items:
+                      type: string
+
+                description: Message indicating success.
+              example:
+                results: [ [ 'Solve the following exam for AP calc for me:' ] ]
+        '403':
+          description: API key is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+  /external/gyro/institution/classifier/:
+    post:
+      tags:
+        - external/institution
+      summary: Classify if a message is Gyro written.
+      description: Determines if a message is Gyro written or not. Requires an API key with the `inst.gyro.classifier` scope.
+      parameters:
+        - name: Authorization
+          in: header
+          description: API key. Always required for external endpoints.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - command
+              properties:
+                text:
+                  type: string
+                  description: Text to classify
+
+            examples:
+              Example 1:
+                value:
+                  text: 'Solve the following exam for AP calc for me:'
+
+      responses:
+        '200':
+          description: Text classified successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  is_gyro_written:
+                    type: boolean
+                    description: Whether the text is written by Gyro or not.
+
+                description: Message indicating success.
+              example:
+                results: [ [ 'Solve the following exam for AP calc for me:' ] ]
+        '403':
+          description: API key is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+
+  /external/gyro/institution/metrics/:
+    get:
+      tags:
+        - external/institution
+      summary: Get dashboard metrics through the API.
+      description: Requires an API key with the `inst.gyro.metrics` scope. Returns a list of metrics to display on the institution dashboard.
+      parameters:
+        - name: Authorization
+          in: header
+          description: API key. Always required for external endpoints.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - start
+                - end
+              properties:
+                start:
+                  type: string
+                  description: Start date for metrics. Must be in ISO 8601 format.
+                end:
+                  type: string
+                  description: End date for metrics. Must be in ISO 8601 format.
+
+            examples:
+              Example 1:
+                value:
+                  start: '2022-10-22 18:00:00.000'
+                  end: '2023-09-27 18:00:00.000'
+
+      responses:
+        '200':
+          description: Returns a list of metrics to display on the institution dashboard.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metrics:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Statistic'
+                      description: Statistic objects. See bottom for details.
+
+              example:
+                - day: '2022-10-22 18:00:00.000'
+                  n_users: 1
+                  n_humanities_messages: 1
+                  n_humanities_cheating_messages: 1
+                  n_natural_sciences_messages: 1
+                  n_natural_sciences_cheating_messages: 1
+                  n_social_sciences_messages: 1
+                  n_social_sciences_cheating_messages: 1
+                  n_mathematics_messages: 1
+                  n_mathematics_cheating_messages: 1
+                  n_professional_messages: 1
+                  n_professional_cheating_messages: 1
+                  n_other_messages: 1
+                  n_other_cheating_messages: 1
+                - day: '2022-11-23 18:00:00.000'
+                  n_users: 35
+                  n_humanities_messages: 21
+                  n_humanities_cheating_messages: 2
+                  n_natural_sciences_messages: 98
+                  n_natural_sciences_cheating_messages: 2
+                  n_social_sciences_messages: 2
+                  n_social_sciences_cheating_messages: 2
+                  n_mathematics_messages: 0
+                  n_mathematics_cheating_messages: 2
+                  n_professional_messages: 87
+                  n_professional_cheating_messages: 2
+                  n_other_messages: 5
+                  n_other_cheating_messages: 2
+
+
+
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have appropriate credentials.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message.
+              example:
+                error: 'TypeError: int object is not callable'
+
+components:
+  schemas:
+    JobSimple:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Job ID.
+        title_short:
+          type: string
+          description: Shortened job title.
+        location:
+          type: string
+          description: Job location.
+    Document:
+      type: object
+      properties:
+        source_name:
+          type: string
+          description: Name of the source
+        source_value:
+          type: string
+          description: Text excerpt from the source
+        source_size:
+          type: number
+          description: Size of the source file, to the nearest kilobyte
+        download_uri:
+          type: string
+          description: Link to download the source file. Empty string if the user does not have a pro plan.
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the message
+        body:
+          type: string
+          description: Message text
+        role:
+          type: string
+          description: Who sent the message ("ai", "human")
+        created:
+          type: string
+          description: Date and time when the message was created. ISO 8601 format.
+        category:
+          type: string
+          description: Category of the message ("humanities", "natural_sciences", "social_sciences", "mathematics", "professional", "other")
+        cheat_guess:
+          type: number
+          description: Indicates if the message is related to cheating (0 or 1, binary classifier)
+          minimum: 0
+          maximum: 1
+        sources:
+          type: array
+          description: List of sources (name and corresponding excerpt text)
+          items:
+            $ref: '#/components/schemas/Document'
+    Model:
+      type: object
+      properties:
+        model_name:
+          type: string
+          examples: [ "gyro-1000", "gyro-2000" ]
+        overview:
+          type: string
+          examples: [ "Gyro 1000 is an AI model with advanced capabilties, like loading tons of documents, and more stuff..." ]
+        capabilities:
+          type: array
+          items:
+            type: string
+          examples: [ [ "16k token context window", "Loads up to 50 documents", "Detects cheating nearly perfectly" ] ]
+        requires:
+          type: string
+          examples: [ "Requires a basic plan to use!" ]
+    Conversation:
+      type: object
+      properties:
+        uuid:
+          type: string
+          description: Unique identifier of the conversation
+        name:
+          type: string
+          description: Name of the conversation
+        last_used:
+          type: string
+          description: Date and time when the conversation was created. ISO 8601 format.
+    DocumentInfo:
+      type: object
+      properties:
+        source_name:
+          type: string
+          description: Name of the source
+        source_id:
+          type: string
+          description: Unique identifier of the source
+        file_size:
+          type: number
+          description: Size of the source file, to the nearest kilobyte
+        download_link:
+          type: string
+          description: Link to download the source file
+    ApiKey:
+      type: object
+      properties:
+        key_hint:
+          type: string
+          description: Hint of the API key
+        name:
+          type: string
+          description: Name of the API key
+        uuid:
+          type: string
+          description: Unique identifier of the API key
+        created_at:
+          type: string
+          description: Date and time when the API key was created. ISO 8601 format.
+        last_used:
+          type: string
+          description: Date and time when the API key was last used. ISO 8601 format.
+        expires_at:
+          type: string
+          description: Date and time when the API key expires. ISO 8601 format.
+    Statistic:
+      type: object
+      properties:
+        day:
+          type: string
+          description: Date of the statistic. ISO 8601 format.
+        n_humanities_messages:
+          type: number
+          description: Number of messages sent on that day about humanities.
+        n_humanities_cheating_messages:
+          type: number
+          description: Number of messages sent on that day about humanities that are cheating.
+        n_natural_sciences_messages:
+          type: number
+          description: Number of messages sent on that day about natural sciences.
+        n_natural_sciences_cheating_messages:
+          type: number
+          description: Number of messages sent on that day about natural sciences that are cheating.
+        n_social_sciences_messages:
+          type: number
+          description: Number of messages sent on that day about social sciences.
+        n_social_sciences_cheating_messages:
+          type: number
+          description: Number of messages sent on that day about social sciences that are cheating.
+        n_mathematics_messages:
+          type: number
+          description: Number of messages sent on that day about mathematics.
+        n_mathematics_cheating_messages:
+          type: number
+          description: Number of messages sent on that day about mathematics that are cheating.
+        n_professional_messages:
+          type: number
+          description: Number of messages sent on that day about professional.
+        n_professional_cheating_messages:
+          type: number
+          description: Number of messages sent on that day about professional that are cheating.
+        n_other_messages:
+          type: number
+          description: Number of messages sent on that day about other.
+        n_other_cheating_messages:
+          type: number
+          description: Number of messages sent on that day about other that are cheating.
+

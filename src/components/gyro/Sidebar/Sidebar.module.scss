@@ -23,7 +23,8 @@
 }
 
 .header {
-  height: g.$nav-height;
+  $nav-height: g.$nav-height;
+  height: calc($nav-height + 1px);
   border-bottom: 1px solid g.$d-purple;
   display: flex;
   align-items: center;
@@ -46,15 +47,23 @@
 }
 
 .children {
+  overflow-y: scroll;
+  @include g.hide-scrollbar;
   @include g.size(100%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: .75rem;
-  container-type: inline-size;
-  @include g.hide-scrollbar;
-  overflow-y: scroll;
-  position: relative;
+
+  &__wrapper {
+    $nav-height: g.$nav-height;
+    @include g.size(calc(100% - $nav-height - .75rem), calc(100% - .75rem));
+    container-type: inline-size;
+    position: relative;
+    border-radius: 0 0 20px 0;
+    overflow: clip;
+    padding-left: .75rem;
+    padding-top: .75rem;
+  }
 }
 
 .plan {

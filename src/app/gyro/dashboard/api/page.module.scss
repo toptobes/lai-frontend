@@ -1,0 +1,118 @@
+@use "/src/styles/use/gyro" as g;
+
+.header {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 1rem;
+
+  & > h1 {
+    font-size: 2.75rem;
+    margin-block: 0;
+  }
+
+  & > button {
+    @include g.size(2.75rem);
+    background: url("../../../../../public/icons/stockier-plus.svg") no-repeat center, linear-gradient(-45deg, g.$d-purple, g.$l-purple);
+    background-size: 40% 40%, auto;
+    border-radius: .75rem;
+    cursor: pointer;
+    transition: box-shadow 100ms;
+
+    &:hover {
+      box-shadow: g.$d-purple 0 0 10px 2px;
+    }
+  }
+}
+
+.about {
+  & > p {
+    color: g.$light-gray;
+    font-weight: 600;
+    margin-block: 2rem;
+
+    & > a {
+      color: g.$l-purple;
+    }
+  }
+}
+
+@mixin with-border-below($color) {
+  position: relative;
+
+  &::after {
+    content: '';
+    border-bottom: 1px solid $color;
+    position: absolute;
+    width: calc(100% - 3rem);
+    bottom: 0;
+    left: 1.5rem;
+    transform: translateY(-.2rem);
+  }
+}
+
+.table {
+  background: #151515;
+  padding: 1.5rem 1rem;
+  border-radius: 1.25rem;
+  min-width: 80%;
+
+  &__wrapper {
+    overflow-x: auto;
+    margin-top: 2rem;
+  }
+
+  th, td {
+    padding: .85rem 1.5rem;
+  }
+
+  &__header-row {
+    @include with-border-below(g.$d-purple);
+
+    & > th {
+      text-align: start;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+  }
+
+  &__row:not(:last-child) {
+    @include with-border-below(g.gray(60));
+  }
+
+  &__row > td {
+    font-size: 1.1rem;
+    font-weight: 375;
+  }
+
+  &__table-btn {
+    display: inline;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    transition: text-shadow 100ms, scale 100ms;
+
+    &:hover {
+      //scale: 1.05;
+    }
+  }
+
+  &__scope-btn {
+    @extend .table__table-btn;
+    color: g.$l-purple;
+    text-decoration: underline;
+
+    &:hover {
+      text-shadow: g.$d-purple 0 0 10px;
+    }
+  }
+
+  &__delete-btn {
+    @extend .table__table-btn;
+    color: rgb(196, 81, 81);
+
+    &:hover {
+      text-shadow: rgb(133, 61, 61) 0 0 10px;
+    }
+  }
+}

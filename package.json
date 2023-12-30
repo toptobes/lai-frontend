@@ -1,12 +1,12 @@
 {
   "name": "lindauer-ai",
   "version": "0.1.0",
-  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sync": "chmod +x scripts/sync-api.sh && ./scripts/sync-api.sh"
   },
   "browserslist": [
     ">0.3%",
@@ -14,6 +14,7 @@
   ],
   "dependencies": {
     "@tanstack/react-query": "^5.13.4",
+    "axios": "^1.6.3",
     "clsx": "^2.0.0",
     "next": "14.0.3",
     "next-themes": "^0.2.1",
@@ -30,6 +31,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.0.3",
     "eslint-plugin-jsx-a11y": "^6.8.0",
+    "openapi-typescript-codegen": "^0.25.0",
     "sass": "^1.69.5",
     "typescript": "^5"
   }

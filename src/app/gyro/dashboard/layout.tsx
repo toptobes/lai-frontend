@@ -1,9 +1,9 @@
 import React from 'react';
-import { Sidebar } from '~/components/gyro/Sidebar';
+import styles from './layout.module.scss';
 
 const Layout = ({ children }: { children: React.ReactNode }) =>
   <>
-    {children}
+    <main className={styles.main}>{children}</main>
   </>
 
 export default Layout;

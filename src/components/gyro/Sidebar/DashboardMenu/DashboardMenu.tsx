@@ -2,10 +2,12 @@
 
 import styles from './DashboardMenu.module.scss';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import clsx from 'clsx';
 
 type Link = {
-  name: string;
-  href: string;
+  name: string,
+  href: string,
 }
 
 const links = [
@@ -32,11 +34,17 @@ const links = [
 ]
 
 export const DashboardMenu = () =>
-  <ul>{
+  <ul className={styles.menuList}>{
     links.map(link => <NavLink key={link.name} link={link}/>)
   }</ul>
 
-const NavLink = ({ link }: { link: Link }) =>
-  <li>
-  <Link href={link.href} scroll={false}>{link.name}</Link>
-  </li>
+const NavLink = ({ link }: { link: Link }) => {
+  const pathname = usePathname();
+
+  const isSelected = pathname === link.href;
+  const className = clsx(styles.menuListContent, isSelected && styles.menuListCurrent);
+
+  return <li>
+    <Link href={link.href} scroll={false} className={className}>{link.name}</Link>
+  </li>;
+}

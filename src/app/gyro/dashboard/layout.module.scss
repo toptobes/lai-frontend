@@ -1,0 +1,9 @@
+@use "/src/styles/use/gyro" as *;
+
+.main {
+  padding: ($nav-height + 3rem) 2rem 2rem;
+  background: $background;
+  width: calc(100% - $sb-width);
+  min-height: 100vh;
+  margin-left: auto;
+}
