@@ -7,14 +7,14 @@ export type JobSimple = {
   /**
    * Job ID.
    */
-  id?: number;
+  id: number;
   /**
    * Shortened job title.
    */
-  title_short?: string;
+  title_short: string;
   /**
    * Job location.
    */
-  location?: string;
+  location: string;
 };
 

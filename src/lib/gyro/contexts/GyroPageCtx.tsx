@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, ReactNode, useMemo } from 'react';
+import { createContext, ReactNode, useContext, useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 
 // Okay so this is not by choice; it's because parallel routing is half-baked and was being buggy. Thanks, Vercel.
@@ -8,12 +8,14 @@ import { usePathname } from 'next/navigation';
 
 export type GyroPage = 'dash' | 'chat';
 
-export type GyroPageCtx = {
+export interface GyroPageCtx {
   page: GyroPage,
   fold: <T>(opts: { dash: T, chat: T }) => T,
 }
 
-export const GyroPageCtx = createContext<GyroPageCtx>(null as any);
+const GyroPageCtx = createContext<GyroPageCtx>(null as any);
+
+export const useGyroPage = () => useContext(GyroPageCtx);
 
 export const GyroPageCtxProvider = ({ children }: { children: ReactNode }) => {
   const page = pageFromPath(usePathname());

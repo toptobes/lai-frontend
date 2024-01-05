@@ -1,0 +1,68 @@
+@use "src/styles/use/gyro" as g;
+@use "../../Sidebar.common" as *;
+
+#drop-zone {
+  position: absolute;
+  bottom: 0;
+  @include g.abs-center-y;
+  margin: .75rem .75rem;
+  border: 1px dashed g.gray(90);
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem 1rem;
+  text-align: center;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: border-color 100ms;
+  background: g.$sidebar-bg;
+  box-shadow: -.65rem 0 .65rem .65rem g.$sidebar-bg;
+  height: 5.25rem;
+  animation: 800ms chat-setting-appear forwards;
+
+  &:hover {
+    border-color: g.gray(110);
+
+    .label-wrapper > label {
+      color: inherit;
+    }
+
+    .label-wrapper > label > span {
+      color: g.$light-gray;
+    }
+  }
+}
+
+.label-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & > label {
+    transition: color 100ms;
+    color: g.$light-gray;
+    white-space: pre;
+    pointer-events: none;
+  }
+
+  & > label > span {
+    transition: color 100ms;
+    color: gray;
+  }
+}
+
+.upload-btn {
+  display: block;
+  font-size: 0;
+  @extend .plus-btn;
+  @include g.size(2.75rem);
+
+  &:focus-within {
+    outline: 2.5px solid;
+  }
+
+  & > input {
+    @include g.accessible-hide;
+  }
+}

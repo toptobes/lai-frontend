@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Nav } from '~/components/landing/Nav';
+import { Nav } from './Nav';
 
 interface Props {
   children: ReactNode,

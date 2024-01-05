@@ -1,0 +1,105 @@
+@use "src/styles/use/gyro" as g;
+@use "../../Sidebar.common" as *;
+
+.upload-modal {
+  &__elem-col {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+  }
+
+  &__elem-row-1 {
+    display: flex;
+    justify-content: space-between;
+    gap: .5rem;
+  }
+
+  &__elem-row-2 {
+    display: flex;
+    gap: .5rem;
+    padding-block: 1rem .25rem;
+    width: fit-content;
+
+    & > label {
+      user-select: none;
+      cursor: pointer;
+    }
+  }
+
+  &__elem-row-3 {
+    display: flex;
+    justify-content: flex-end;
+    gap: .5rem;
+  }
+
+  #upload-modal__name {
+    flex: 1;
+  }
+
+  #upload-modal__extension {
+    width: 8ch;
+  }
+
+  #upload-modal__view-file {
+    background: g.$selected;
+    border-radius: 5px;
+    border: none;
+    padding: .5rem;
+    cursor: pointer;
+  }
+
+  #upload-modal__advanced {
+    background: g.$less-selected;
+    padding: 10px;
+    border-radius: 10px;
+
+    & > summary {
+      display: block;
+      list-style-type: none;
+      cursor: pointer;
+      margin-bottom: -10px;
+      transition: margin 300ms ease-out, filter 100ms ease-in-out;
+      color: g.$light-gray;
+
+      @include g.on-interaction {
+        filter: brightness(1.1) saturate(1.1);
+      }
+
+      &::before {
+        margin-right: .75ch;
+        display: inline-block;
+        content: '▶';
+        transition: rotate 300ms ease-out;
+      }
+    }
+
+    &:not([open]) {
+      padding-bottom: 20px;
+    }
+
+    &:not([open]) + * {
+      margin-top: 10px;
+    }
+
+    &[open] > summary {
+      margin-bottom: 0;
+
+      &::before {
+        rotate: 90deg;
+      }
+    }
+
+    div:first-of-type {
+      margin-block: 10px 1rem;
+    }
+  }
+
+  #upload-modal__remember {
+    accent-color: g.$l-purple;
+    cursor: pointer;
+  }
+
+  #upload-modal__upload {
+    background: linear-gradient(-45deg, #553498, #7352b9 55%) !important;
+  }
+}

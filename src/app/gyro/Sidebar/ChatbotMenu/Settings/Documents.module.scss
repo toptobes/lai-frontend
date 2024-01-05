@@ -1,0 +1,78 @@
+@use "src/styles/use/gyro" as g;
+@use "../../Sidebar.common" as *;
+
+.document {
+  padding-inline: 2.5%;
+  margin-block: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  height: 3rem;
+  border-radius: 10px;
+  width: 100%;
+  opacity: 1;
+  background: g.$chat;
+  transition: background-color 100ms;
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+
+  &:hover {
+    background: g.$less-selected;
+  }
+
+  & > span {
+    @include g.clip-text-line;
+    display: block;
+    flex: 1;
+  }
+
+  & > button {
+    display: none;
+  }
+
+  @container (min-width: 35rem) {
+    & > button {
+      display: initial;
+    }
+
+    & > #placeholder-dots {
+      display: none;
+    }
+  }
+}
+
+@mixin doc-settings__button($img) {
+  @include g.size(1.5rem);
+  background: g.icon($img);
+  cursor: pointer;
+  opacity: .5;
+  transition: opacity 100ms;
+
+  &:hover {
+    opacity: .95;
+  }
+}
+
+#download-doc {
+  @include doc-settings__button('download');
+}
+
+#info-doc {
+  @include doc-settings__button('info');
+}
+
+#delete-doc {
+  @include doc-settings__button('trash');
+  background-size: 80%;
+
+  &:hover {
+    filter: invert(.75) sepia(1) saturate(3) hue-rotate(-60deg); // Converts the white to a red
+  }
+}
+
+#placeholder-dots {
+  @include doc-settings__button('3-vertical-dots');
+  opacity: .25;
+}

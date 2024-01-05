@@ -1,0 +1,8 @@
+@use "src/styles/use/gyro" as g;
+@use "../Sidebar.common" as *;
+
+@keyframes slide-from-up {
+  from {
+    transform: translateY(var(--height));
+  }
+}

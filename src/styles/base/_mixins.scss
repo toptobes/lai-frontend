@@ -25,12 +25,14 @@
   left: 0;
   right: 0;
   margin-inline: auto;
+  position: absolute;
 }
 
 @mixin abs-center-x {
   top: 0;
   bottom: 0;
   margin-block: auto;
+  position: absolute;
 }
 
 @mixin abs-top-left {
@@ -63,4 +65,11 @@
   @media (min-width: $bp) {
     #{$prop}: $large;
   }
+}
+
+@mixin accessible-hide {
+  position: absolute !important;
+  @include size(1px);
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
 }

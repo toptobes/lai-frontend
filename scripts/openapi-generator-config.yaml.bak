@@ -1,7 +1,0 @@
-generatorName: typescript-axios
-outputDir: src/generated/openapi
-cleanupOutput: true
-inputSpec: ../app/backend/target/openapi.yaml
-skipValidateSpec: true
-additionalProperties:
-  supportsES6: true

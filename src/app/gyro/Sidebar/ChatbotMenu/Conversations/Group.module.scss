@@ -1,0 +1,92 @@
+@use "src/styles/use/gyro" as g;
+@use "../../Sidebar.common" as *;
+
+.date-group {
+  width: 100%;
+  transition: $menu-transition;
+  $group: &;
+
+  &__header {
+    @extend .menu-header;
+    margin: .75rem 0 0;
+  }
+
+  &:first-of-type > h5 {
+    margin: 0;
+  }
+
+  & > ul {
+    @extend .menu-ul;
+  }
+
+  &__content {
+    @extend .menu-ul__content;
+    transition: $menu-transition, background-color 100ms;
+    white-space: nowrap;
+
+    & > span {
+      padding: .75rem;
+      margin-left: -.75rem;
+      display: inline;
+    }
+  }
+
+  &__content.selected {
+    padding-right: 2.75rem;
+    background-color: g.$selected;
+
+    & > #{$group}__settings-button {
+      opacity: 1;
+      pointer-events: none;
+      rotate: -90deg;
+    }
+
+    &.renaming > span {
+      display: none;
+    }
+
+    &.renaming > #{$group}__settings-button {
+      display: none;
+    }
+  }
+
+  &__settings-button {
+    background: g.icon('3-vertical-dots');
+    background-size: 40% 40%;
+    scale: 2;
+    position: absolute;
+    @include g.size(1.5rem);
+    @include g.abs-center-x;
+    right: .75rem;
+    opacity: 0;
+    transition: opacity 100ms, rotate ease-out 250ms;
+    cursor: pointer;
+
+    &:hover {
+      rotate: -90deg;
+    }
+  }
+
+  &__content.menu-ul__current > &__settings-button {
+    background: g.icon('settings');
+    background-size: 50% 50%;
+  }
+
+  @container (min-width: 35rem) {
+    &__content {
+      padding-right: 2.75rem;
+
+      & > #{$group}__settings-button {
+        opacity: .5;
+      }
+    }
+
+    &__content.menu-ul__current > &__settings-button, &__content:hover > &__settings-button {
+      opacity: .75;
+    }
+
+    &__content:hover.menu-ul__current > &__settings-button {
+      opacity: 1;
+    }
+  }
+}

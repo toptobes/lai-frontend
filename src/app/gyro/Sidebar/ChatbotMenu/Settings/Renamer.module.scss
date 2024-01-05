@@ -1,0 +1,59 @@
+@use "src/styles/use/gyro" as g;
+
+#form {
+  & > input {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: .5rem;
+    margin-left: -.5rem;
+    margin-top: -.5rem;
+    outline: none;
+    flex: 1;
+  }
+
+  & > button {
+    display: block;
+    @include g.size(1.5rem);
+    @include g.abs-center-x;
+    right: .75rem;
+    scale: 2;
+
+    opacity: .8;
+    transition: opacity 100ms;
+    filter: invert(95%) sepia(2%) saturate(7418%) hue-rotate(188deg) brightness(135%) contrast(72%);
+    background: g.icon('circle-check-2');
+    background-size: 50% 50%;
+    pointer-events: all;;
+
+    animation: to-not-rotated 750ms cubic-bezier(.52,.19,.33,1.49) forwards;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &.loading > button {
+    background: g.icon('circle-check-2-outline');
+    background-size: 50% 50%;
+    animation: rotating 1250ms ease-in-out infinite;
+  }
+}
+
+@keyframes to-not-rotated {
+  from {
+    rotate: -180deg;
+  }
+  to {
+    rotate: 0deg;
+  }
+}
+
+@keyframes rotating {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 360deg;
+  }
+}

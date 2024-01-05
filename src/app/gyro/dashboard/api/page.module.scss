@@ -64,6 +64,7 @@
 
   th, td {
     padding: .85rem 1.5rem;
+    vertical-align: top;
   }
 
   &__header-row {
@@ -77,12 +78,12 @@
   }
 
   &__row:not(:last-child) {
-    @include with-border-below(g.gray(60));
+    @include with-border-below(#3c3c3c);
   }
 
   &__row > td {
     font-size: 1.1rem;
-    font-weight: 375;
+    font-weight: 300;
   }
 
   &__table-btn {
@@ -97,7 +98,36 @@
     }
   }
 
-  &__scope-btn {
+  &__delete-btn {
+    @extend .table__table-btn;
+    color: rgb(196, 81, 81);
+
+    &:hover {
+      text-shadow: rgb(133, 61, 61) 0 0 10px;
+    }
+  }
+}
+
+.hidden-prefix {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: .5rem;
+
+  &.show-prefix > button {
+    background: url("../../../../../public/icons/hide.svg") no-repeat center;
+  }
+
+  & > button {
+    filter: invert(19%) sepia(0%) saturate(57%) hue-rotate(166deg) brightness(91%) contrast(81%); // to #3c3c3c
+    background: url("../../../../../public/icons/show.svg") no-repeat center;
+    @include g.size(1rem, 1.25rem);
+    cursor: pointer;
+  }
+}
+
+.hidden-scopes {
+  & > button {
     @extend .table__table-btn;
     color: g.$l-purple;
     text-decoration: underline;
@@ -107,12 +137,14 @@
     }
   }
 
-  &__delete-btn {
-    @extend .table__table-btn;
-    color: rgb(196, 81, 81);
+  & > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    padding-block: .25rem;
 
-    &:hover {
-      text-shadow: rgb(133, 61, 61) 0 0 10px;
+    & > li {
+      margin-top: .25rem;
     }
   }
 }

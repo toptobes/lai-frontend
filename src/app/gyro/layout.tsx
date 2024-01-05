@@ -1,20 +1,20 @@
-import { ReactNode } from 'react';
-import { Nav } from '~/components/gyro/Nav';
-import { Sidebar } from '~/components/gyro/Sidebar';
+import React from 'react';
+import { Nav } from './Nav';
+import { Sidebar } from './Sidebar';
 import styles from './layout.module.scss';
 import { GyroPageCtxProvider } from '~/lib/gyro/contexts/GyroPageCtx';
+import { CreateNewChatProvider } from '~/lib/gyro/contexts/CreateNewChatCtx';
+import { Kids } from '~/lib/prelude';
 
-interface Props {
-  children: ReactNode,
-}
-
-const Layout = ({ children }: Props) =>
+const Layout = ({ children }: Kids) =>
   <GyroPageCtxProvider>
-    <div id={styles.bg}>
-      <Nav/>
-      <Sidebar/>
-      {children}
-    </div>
+    <CreateNewChatProvider>
+      <div id={styles.bg}>
+        <Nav/>
+        <Sidebar/>
+        {children}
+      </div>
+    </CreateNewChatProvider>
   </GyroPageCtxProvider>
 
 export default Layout;

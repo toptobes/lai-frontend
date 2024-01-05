@@ -1,3 +1,15 @@
 @function gray($amount, $alpha: 1) {
   @return rgba($amount, $amount, $amount, $alpha);
 }
+
+@function icon($name) {
+  @return url("~/public/icons/#{$name}.svg") no-repeat center;
+}
+
+@function logo($name) {
+  @return url("~/public/logos/#{$name}.svg") no-repeat center;
+}
+
+@function public($name) {
+  @return url("~/public/#{$name}");
+}

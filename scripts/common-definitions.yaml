@@ -1,0 +1,697 @@
+components:
+  schemas:
+    GenderSchema:
+      type: object
+      required:
+        - gender
+      properties:
+        gender:
+          type: string
+          enum: [ 'male', 'female', 'x' ]
+    UserProfileEdit:
+      type: object
+      required:
+        - new_name
+        - new_gender
+      properties:
+        new_name:
+          type: string
+        new_gender:
+          type: string
+          enum: [ 'male', 'female', 'x' ]
+    ConversationName:
+      type: object
+      required:
+        - conversation_name
+      properties:
+        conversation_name:
+          type: string
+    NewConversationName:
+      type: object
+      required:
+        - new_conversation_name
+      properties:
+        new_conversation_name:
+          type: string
+          description: New name for the conversation.
+    UploadDocument:
+      type: object
+      required:
+        - primary_file
+        - source_name
+      properties:
+        primary_file:
+          type: string
+          format: binary
+          description: Upload a file (.txt, .docx, or .pdf).
+        source_name:
+          type: string
+          description: Filename of the document.
+        chunk_size?:
+          type: number
+          description: Optional advanced feature to control how the RecursiveTextSplitter chunks each document by changing the size of each subdoc.
+        chunk_overlap?:
+          type: number
+          description: Optional advanced feature to control how the RecursiveTextSplitter chunks each document by changing the overlap between subdocs.
+    SendMessage:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Message text to send.
+        model?:
+          type: string
+          description: Model to use for the message. Default is `gyro-1000` but a pro user can use `gyro-2000`. Will return 403 if the user does not have a pro plan but does have a basic plan. These will default to the latest models (which start at `gyro-1001` and `gyro-2001`, but will increase over time).
+          enum: [ 'gyro-1000', 'gyro-2000' ]
+        n_sources?:
+          type: number
+          description: Number of sources to use for the response. Default is 3, but can be any number between 0 and 50 (`gyro-1xxx`) and 0 and 25 (`'`gyro-2xxx`). Will throw a 500 error if out of bounds/
+          minimum: 0
+          maximum: 50
+          default: 3
+    EditMessage:
+      type: object
+      required:
+        - new_message
+      properties:
+        new_message:
+          type: string
+          description: Message text to replace the old message.
+        model?:
+          type: string
+          description: Model to use for the message. Default is `gyro-1000` but a pro user can use `gyro-2000`. Will return 403 if the user does not have a pro plan but does have a basic plan. These will default to the latest models (which start at `gyro-1001` and `gyro-2001`, but will increase over time).
+          enum: [ 'gyro-1000', 'gyro-2000' ]
+    StreamMessage:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Message text to send.
+        n_sources?:
+          type: number
+          description: Number of sources to use for the response. Default is 3, but can be any number between 0 and 50 (`gyro-1xxx`) and 0 and 25 (`gyro-2xxx`). Will throw a 500 error if out of bounds/
+          minimum: 0
+          maximum: 50
+          default: 3
+    VerifySet:
+      type: object
+      required:
+        - plan
+      properties:
+        plan:
+          type: string
+          description: Plan name to buy. Can be `basic` or `pro`. This is only used to verify the amount paid, and doesn't actually change the user's plan.
+    JobSimple:
+      type: object
+      required:
+        - id
+        - title_short
+        - location
+      properties:
+        id:
+          type: number
+          description: Job ID.
+        title_short:
+          type: string
+          description: Shortened job title.
+        location:
+          type: string
+          description: Job location.
+    ClassifyText:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+          description: Text to classify
+    AdminDashboard:
+      type: object
+      required:
+        - start
+        - end
+      properties:
+        start:
+          type: string
+          description: Start date for metrics. Must be in ISO 8601 format.
+        end:
+          type: string
+          description: End date for metrics. Must be in ISO 8601 format.
+    CreateKey:
+      type: object
+      required:
+        - name
+        - scope
+      properties:
+        name:
+          type: string
+          description: Name of the key to create.
+        scope:
+          type: array
+          description: List of scopes to give the key. Can be `inst.gyro.metrics`, `inst.gyro.history`, and/or `inst.gyro.classifier`.
+          items:
+            type: string
+            enum: [ 'inst.gyro.metrics', 'inst.gyro.history', 'inst.gyro.classifier' ]
+        expires_in?:
+          type: number
+          description: Number of days until the key expires. Default is 90, which means the key expires in 90 days.
+    GetDashboardMetrics:
+      type: object
+      required:
+        - start
+        - end
+      properties:
+        start:
+          type: string
+          description: Start date for metrics. Must be in ISO 8601 format.
+        end:
+          type: string
+          description: End date for metrics. Must be in ISO 8601 format.
+    RunCommand:
+      type: object
+      required:
+        - command
+      properties:
+        command:
+          type: string
+          description: Command to run. For proper use, see the documentation.
+    MetricStartEnd:
+      type: object
+      required:
+        - start
+        - end
+      properties:
+        start:
+          type: string
+          description: Start date for metrics. Must be in ISO 8601 format.
+        end:
+          type: string
+          description: End date for metrics. Must be in ISO 8601 format.
+    CreatedEntity:
+      type: object
+      required:
+        - name
+        - email
+        - gender
+        - institution_name
+        - created_at
+      properties:
+        name:
+          type: string
+          description: Name of the user.
+        email:
+          type: string
+          description: Entity's email.
+        gender:
+          type: string
+          description: Entity's gender.
+          enum: [ 'male', 'female', 'x' ]
+        institution_name:
+          type: string
+          description: Name of the institution (if applicable, i.e. is a user/teacher).
+        created_at:
+          type: string
+          description: ISO 8601 timestamp of when the entity was created.
+    EntityCreationResult:
+      type: object
+      required:
+        - name
+        - role
+        - institution_name
+      properties:
+        name:
+          type: string
+          description: Name of the user.
+        role:
+          type: string
+          description: Role of the user, either `user-none`, `user-basic`, `user-pro`, `teacher`, `institution`, `admin`. Admin is for Lindauer AI employees only.
+          enum: [ 'user-none', 'user-basic', 'user-pro', 'teacher', 'institution', 'admin' ]
+        institution_name:
+          type: string
+          description: Name of the institution (if applicable, i.e. is a user/teacher).
+    FetchProfile:
+      type: object
+      required:
+        - name
+        - email
+        - gender
+        - created_at
+      properties:
+        name:
+          type: string
+          description: Name of the user.
+        email:
+          type: string
+          description: Entity's email.
+        gender:
+          type: string
+          description: Entity's gender.
+          enum: [ 'male', 'female', 'x' ]
+        created_at:
+          type: string
+          description: ISO 8601 timestamp of when the entity was created.
+    FetchConvos:
+      type: object
+      required:
+        - conversations
+      properties:
+        conversations:
+          type: array
+          description: List of conversations.
+          items:
+            $ref: '#/components/schemas/Conversation'
+            description: Conversation object. See below for schema.
+    FetchDocs:
+      type: object
+      required:
+        - documents
+      properties:
+        documents:
+          type: array
+          description: List of documents.
+          items:
+            $ref: '#/components/schemas/DocumentInfo'
+            description: Document object. See below for schema.
+    MsgResponse:
+      type: object
+      required:
+        - response
+        - sources
+      properties:
+        response:
+          type: string
+          description: Gyro's response to the message provided.
+        sources:
+          type: array
+          description: List of sources that the response was generated from.
+          items:
+            $ref: '#/components/schemas/Document'
+    ListMessages:
+      type: object
+      required:
+        - messages
+      properties:
+        messages:
+          type: array
+          description: List of messages.
+          items:
+            $ref: '#/components/schemas/Message'
+            description: Message object. See below for schema.
+    ListGtkyMessages:
+      type: object
+      required:
+        - messages
+      properties:
+        messages:
+          type: array
+          description: List of get-to-know-you messages.
+          items:
+            $ref: '#/components/schemas/GtkyMessage'
+            description: Message object. See below for schema.
+    ClassifierResponse:
+      type: object
+      required:
+        - is_gyro_written
+      properties:
+        is_gyro_written:
+          type: boolean
+          description: Whether the text is written by Gyro or not.
+      description: Message indicating success.
+    AdminStats:
+      type: object
+      required:
+        - days
+        - n_messages
+        - n_usermins
+        - n_institutions
+      properties:
+        days:
+          type: array
+          items:
+            type: string
+        n_messages:
+          type: array
+          items:
+            type: integer
+        n_usermins:
+          type: array
+          items:
+            type: integer
+        n_institutions:
+          type: array
+          items:
+            type: integer
+    ApiKeys:
+      type: object
+      required:
+        - keys
+      properties:
+        keys:
+          type: array
+          description: List of keys.
+          items:
+            $ref: '#/components/schemas/ApiKey'
+    Stats:
+      type: object
+      required:
+        - metrics
+      properties:
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/Statistic'
+            description: Statistic objects. See bottom for details.
+    Jobs:
+      type: object
+      required:
+        - jobs
+      properties:
+        jobs:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobSimple'
+          description: Job objects. See bottom for details.
+      description: Message indicating success.
+    JobFine:
+      type: object
+      required:
+        - job_id
+        - title_short
+        - title_long
+        - location
+        - description
+        - responsibilities
+        - qualifications
+      properties:
+        job_id:
+          type: number
+          description: Job ID.
+        title_short:
+          type: string
+          description: Shortened job title.
+        title_long:
+          type: string
+          description: Full job title.
+        location:
+          type: string
+          description: Job location.
+        description:
+          type: string
+          description: Job description.
+        responsibilities:
+          type: array
+          description: Job responsibilities.
+          items:
+            type: string
+        qualifications:
+          type: array
+          description: Job qualifications.
+          items:
+            type: string
+
+      description: Message indicating success.
+    AIModels:
+      type: object
+      required:
+        - models
+      properties:
+        models:
+          type: array
+          description: Array of AI model names.
+          items:
+            $ref: '#/components/schemas/Model'
+            description: AI model objects. See bottom for details.
+
+      description: Message indicating success.
+    QueryResponse:
+      type: object
+      required:
+        - results
+      properties:
+        results:
+          type: array
+          description: Rows that match the query command.
+          items:
+            type: string
+    ClassifyResponse:
+      type: object
+      required:
+        - is_gyro_written
+      properties:
+        is_gyro_written:
+          type: boolean
+          description: Whether the text is written by Gyro or not.
+
+      description: Message indicating success.
+    StatisticsList:
+      type: object
+      required:
+        - metrics
+      properties:
+        metrics:
+          type: array
+          items:
+            $ref: '#/components/schemas/Statistic'
+            description: Statistic objects. See bottom for details.
+    GetToKnowYouMsg:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Message to send to the get-to-know-you chatbot.
+    Document:
+      type: object
+      required:
+        - source_name
+        - source_value
+        - source_size
+        - download_uri
+      properties:
+        source_name:
+          type: string
+          description: Name of the source
+        source_value:
+          type: string
+          description: Text excerpt from the source
+        source_size:
+          type: number
+          description: Size of the source file, to the nearest kilobyte
+        download_uri:
+          type: string
+          description: Link to download the source file. Empty string if the user does not have a pro plan.
+    Message:
+      type: object
+      required:
+        - id
+        - body
+        - role
+        - created
+        - category
+        - cheat_guess
+        - sources
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the message
+        body:
+          type: string
+          description: Message text
+        role:
+          type: string
+          description: Who sent the message ("ai", "human")
+        created:
+          type: string
+          description: Date and time when the message was created. ISO 8601 format.
+        category:
+          type: string
+          description: Category of the message ("humanities", "natural_sciences", "social_sciences", "mathematics", "professional", "other")
+        cheat_guess:
+          type: number
+          description: Indicates if the message is related to cheating (0 or 1, binary classifier)
+          minimum: 0
+          maximum: 1
+        sources:
+          type: array
+          description: List of sources (name and corresponding excerpt text)
+          items:
+            $ref: '#/components/schemas/Document'
+    GtkyMessage:
+      type: object
+      required:
+        - body
+        - role
+        - created
+      properties:
+        body:
+          type: string
+          description: Message text
+        role:
+          type: string
+          description: Who sent the message ("ai", "human")
+        created:
+          type: string
+          description: Date and time when the message was created. ISO 8601 format.
+    GtkyStatus:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: boolean
+          description: Status of the get-to-know-you chatbot (true if enabled, false if disabled)
+    Model:
+      type: object
+      required:
+        - model_name
+        - overview
+        - capabilities
+        - requires
+      properties:
+        model_name:
+          type: string
+          examples: [ "gyro-1000", "gyro-2000" ]
+        overview:
+          type: string
+          examples: [ "Gyro 1000 is an AI model with advanced capabilties, like loading tons of documents, and more stuff..." ]
+        capabilities:
+          type: array
+          items:
+            type: string
+          examples: [ [ "16k token context window", "Loads up to 50 documents", "Detects cheating nearly perfectly" ] ]
+        requires:
+          type: string
+          examples: [ "Requires a basic plan to use!" ]
+    Conversation:
+      type: object
+      required:
+        - conversation_id
+        - name
+        - last_used
+      properties:
+        conversation_id:
+          type: string
+          description: Unique identifier of the conversation
+        name:
+          type: string
+          description: Name of the conversation
+        last_used:
+          type: string
+          description: Date and time when the conversation was created. ISO 8601 format.
+    DocumentInfo:
+      type: object
+      required:
+        - source_name
+        - source_id
+        - file_size
+        - download_link
+      properties:
+        source_name:
+          type: string
+          description: Name of the source
+        source_id:
+          type: string
+          description: Unique identifier of the source
+        file_size:
+          type: number
+          description: Size of the source file, to the nearest kilobyte
+        download_link:
+          type: string
+          description: Link to download the source file
+    ApiKey:
+      required:
+        - key_hint
+        - name
+        - uuid
+        - created_at
+        - last_used
+        - expires_at
+      type: object
+      properties:
+        key_hint:
+          type: string
+          description: Hint of the API key
+        name:
+          type: string
+          description: Name of the API key
+        uuid:
+          type: string
+          description: Unique identifier of the API key
+        created_at:
+          type: string
+          description: Date and time when the API key was created. ISO 8601 format.
+        last_used:
+          type: string
+          description: Date and time when the API key was last used. ISO 8601 format.
+        expires_at:
+          type: string
+          description: Date and time when the API key expires. ISO 8601 format.
+    ResponseError:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error message.
+    Statistic:
+      type: object
+      required:
+        - day
+        - n_humanities_messages
+        - n_humanities_cheating_messages
+        - n_natural_sciences_messages
+        - n_natural_sciences_cheating_messages
+        - n_social_sciences_messages
+        - n_social_sciences_cheating_messages
+        - n_mathematics_messages
+        - n_mathematics_cheating_messages
+        - n_professional_messages
+        - n_professional_cheating_messages
+        - n_other_messages
+        - n_other_cheating_messages
+      properties:
+        day:
+          type: string
+          description: Date of the statistic. ISO 8601 format.
+        n_humanities_messages:
+          type: number
+          description: Number of messages sent on that day about humanities.
+        n_humanities_cheating_messages:
+          type: number
+          description: Number of messages sent on that day about humanities that are cheating.
+        n_natural_sciences_messages:
+          type: number
+          description: Number of messages sent on that day about natural sciences.
+        n_natural_sciences_cheating_messages:
+          type: number
+          description: Number of messages sent on that day about natural sciences that are cheating.
+        n_social_sciences_messages:
+          type: number
+          description: Number of messages sent on that day about social sciences.
+        n_social_sciences_cheating_messages:
+          type: number
+          description: Number of messages sent on that day about social sciences that are cheating.
+        n_mathematics_messages:
+          type: number
+          description: Number of messages sent on that day about mathematics.
+        n_mathematics_cheating_messages:
+          type: number
+          description: Number of messages sent on that day about mathematics that are cheating.
+        n_professional_messages:
+          type: number
+          description: Number of messages sent on that day about professional.
+        n_professional_cheating_messages:
+          type: number
+          description: Number of messages sent on that day about professional that are cheating.
+        n_other_messages:
+          type: number
+          description: Number of messages sent on that day about other.
+        n_other_cheating_messages:
+          type: number
+          description: Number of messages sent on that day about other that are cheating.

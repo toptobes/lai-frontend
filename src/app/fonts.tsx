@@ -1,4 +1,4 @@
-import { Fira_Sans, Nunito, Open_Sans } from 'next/font/google';
+import { Fira_Sans, JetBrains_Mono, Nunito, Open_Sans } from 'next/font/google';
 
 export const nunito = Nunito({
   subsets: ['latin'],
@@ -13,5 +13,10 @@ export const openSans = Open_Sans({
 export const firaSans = Fira_Sans({
   subsets: ['latin'],
   weight: '400',
+  display: 'swap',
+});
+
+export const mono = JetBrains_Mono({
+  subsets: ['latin'],
   display: 'swap',
 });

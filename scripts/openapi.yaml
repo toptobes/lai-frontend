@@ -5,7 +5,6 @@ info:
     url: 'https://lindauerai.com/images/lindauer_ai_dark_logo_full.svg'
     backgroundColor: '#161719'
 
-
   description: |-
     # Getting Started
     
@@ -61,9 +60,14 @@ info:
   termsOfService: https://lindauerai.com/terms.html/
   contact:
     email: support@lindauerai.com
-  version: 1.0.1
+  version: 1.0.2
 servers:
+  - url: https://api.lindauerai.com
+    description: Production server that points to `https://gyro-405519.uc.r.appspot.com`
   - url: https://gyro-405519.uc.r.appspot.com
+    description: Production server
+  - url: http://localhost:5010
+    description: Local server for testing
 tags:
   - name: internal/user
     description: Internal documentation about API calls for user functionality.
@@ -77,6 +81,7 @@ tags:
     description: Internal API calls for Lindauer AI employees only.
   - name: external/institution
     description: External API calls for use with API keys.
+
 
 paths:
   /internal/user/:
@@ -95,17 +100,12 @@ paths:
             type: string
 
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                gender:
-                  type: string
-                  enum: [ 'male', 'female', 'x' ]
+              $ref: 'common-definitions.yaml#/components/schemas/GenderSchema'
             examples:
-              Example 1:
+              Example1:
                 value:
                   gender: "female"
 
@@ -115,25 +115,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: Name of the user.
-                  email:
-                    type: string
-                    description: Entity's email.
-                  gender:
-                    type: string
-                    description: Entity's gender.
-                    enum: [ 'male', 'female', 'x' ]
-                  institution_name:
-                    type: string
-                    description: Name of the institution (if applicable, i.e. is a user/teacher).
-                  created_at:
-                    type: string
-                    description: ISO 8601 timestamp of when the entity was created.
-
+                $ref: 'common-definitions.yaml#/components/schemas/CreatedEntity'
 
               example:
                 name: 'George Washington'
@@ -158,14 +140,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
     get:
       tags:
         - internal/user
@@ -187,18 +164,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: Name of the user.
-                  role:
-                    type: string
-                    description: Role of the user, either `user-none`, `user-basic`, `user-pro`, `teacher`, `institution`, `admin`. Admin is for Lindauer AI employees only.
-                    enum: [ 'user-none', 'user-basic', 'user-pro', 'teacher', 'institution', 'admin' ]
-                  institution_name:
-                    type: string
-                    description: Name of the institution (if applicable, i.e. is a user/teacher).
+                $ref: 'common-definitions.yaml#/components/schemas/EntityCreationResult'
               example:
                 name: 'George Washington'
                 institution_name: 'Martian University'
@@ -220,14 +186,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
   /internal/user/profile/:
     get:
       tags:
@@ -250,22 +211,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  name:
-                    type: string
-                    description: Name of the user.
-                  email:
-                    type: string
-                    description: Entity's email.
-                  gender:
-                    type: string
-                    description: Entity's gender.
-                    enum: [ 'male', 'female', 'x' ]
-                  created_at:
-                    type: string
-                    description: ISO 8601 timestamp of when the entity was created.
-
+                $ref: 'common-definitions.yaml#/components/schemas/FetchProfile'
               example:
                 name: 'George Washington'
                 email: 'g.w@presidents.gov'
@@ -289,14 +235,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
     put:
       tags:
         - internal/user
@@ -311,19 +252,12 @@ paths:
             type: string
 
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                new_name:
-                  type: string
-                new_gender:
-                  type: string
-                  enum: [ 'male', 'female', 'x' ]
+              $ref: 'common-definitions.yaml#/components/schemas/UserProfileEdit'
             examples:
-              Example 1:
+              Example1:
                 value:
                   new_name: 'Bill Stevens'
                   new_gender: "x"
@@ -351,16 +285,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
-
-
   /internal/gyro/conversations/new/:
     post:
       tags:
@@ -376,20 +303,14 @@ paths:
             type: string
 
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - conversation_name
-              properties:
-                conversation_name:
-                  type: string
+              $ref: 'common-definitions.yaml#/components/schemas/ConversationName'
             examples:
-              Example 1:
+              Example1:
                 value:
-                  conversation_name: "Math Help"
+                  conversation_name: 'Math Help'
 
       responses:
         '201':
@@ -421,14 +342,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
   /internal/gyro/conversations/{conversation_id}/:
     put:
       tags:
@@ -443,24 +359,17 @@ paths:
           schema:
             type: string
         - name: conversation_id
-          in: header
+          in: path
           description: UUID of the conversation to ask the message in.
           required: true
           schema:
             type: string
 
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - new_conversation_name
-              properties:
-                new_conversation_name:
-                  type: string
-                  description: New name for the conversation.
+              $ref: 'common-definitions.yaml#/components/schemas/NewConversationName'
             examples:
               Example 1:
                 value:
@@ -489,14 +398,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
     delete:
       tags:
         - internal/user
@@ -510,7 +414,7 @@ paths:
           schema:
             type: string
         - name: conversation_id
-          in: header
+          in: path
           description: UUID of the conversation to ask the message in.
           required: true
           schema:
@@ -539,14 +443,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
   /internal/gyro/conversations/:
     get:
       tags:
@@ -567,21 +466,14 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  conversations:
-                    type: array
-                    description: List of conversations.
-                    items:
-                      $ref: '#/components/schemas/Conversation'
-                      description: Conversation object. See below for schema.
+                $ref: 'common-definitions.yaml#/components/schemas/FetchConvos'
               example:
                 conversations:
                   - conversation_id: "3bb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c"
-                    conversation_name: "Math Help"
+                    name: "Math Help"
                     last_used: "2022-10-22 18:00:00.000"
                   - conversation_id: "9cb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c"
-                    conversation_name: "Music Theory"
+                    name: "Music Theory"
                     last_used: "2023-09-27 18:00:00.000"
         '401':
           description: User oauth credentials are incorrect.
@@ -600,16 +492,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
-
-
   /internal/gyro/documents/{conversation_id}/:
     post:
       tags:
@@ -631,34 +516,14 @@ paths:
             type: string
 
       requestBody:
-        required: true
         content:
           multipart/form-data:
             schema:
-              type: object
-              required:
-                - primary_file
-                - source_name
-              properties:
-                primary_file:
-                  type: string
-                  format: binary
-                  description: Upload a file (.txt, .docx, or .pdf).
-                source_name:
-                  type: string
-                  description: Filename of the document.
-                chunk_size:
-                  type: number
-                  description: Optional advanced feature to control how the RecursiveTextSplitter chunks each document by changing the size of each subdoc.
-                chunk_overlap:
-                  type: number
-                  description: Optional advanced feature to control how the RecursiveTextSplitter chunks each document by changing the overlap between subdocs.
-
+              $ref: 'common-definitions.yaml#/components/schemas/UploadDocument'
             examples:
               Example 1:
                 value:
                   source_name: "textbook.txt"
-
 
       responses:
         '200':
@@ -684,14 +549,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
     get:
       tags:
         - internal/user
@@ -717,14 +577,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  documents:
-                    type: array
-                    description: List of documents.
-                    items:
-                      $ref: '#/components/schemas/DocumentInfo'
-                      description: Document object. See below for schema.
+                $ref: 'common-definitions.yaml#/components/schemas/FetchDocs'
               example:
                 documents:
                   - source_name: "math_textbook_1.pdf"
@@ -735,13 +588,6 @@ paths:
                     id: "9cd98b1f-a1c4-4b6f-bbb2-45cf48b7c33c"
                     file_size: 25
                     download_link: 'https://storage.googleapis.com/gyro-storage/3bb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c/math_textbook_2.pdf'
-
-        '204':
-          description: No documents found.
-          content:
-            application/json:
-              schema:
-                type: object
         '401':
           description: User oauth credentials are incorrect.
           content:
@@ -759,15 +605,10 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
-  /internal/user/documents/{conversation_id}/{id}/:
+  /internal/user/documents/{conversation_id}/{source_id}/:
     delete:
       tags:
         - internal/user
@@ -786,7 +627,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: id
+        - name: source_id
           in: path
           description: ID of the source to delete.
           required: true
@@ -817,217 +658,10 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
-
-
-
   /internal/gyro/conversations/{conversation_id}/messages/:
-    post:
-      tags:
-        - internal/user
-      summary: Send a message.
-      description: Send a message to Gyro and receive its response. This is NOT a stream, and is not preferable because the user will have to wait longer before reading.
-      parameters:
-        - name: Authorization
-          in: header
-          description: User's ID token. Always required.
-          required: true
-          schema:
-            type: string
-        - name: conversation_id
-          in: path
-          description: UUID of the conversation to ask the message in.
-          required: true
-          schema:
-            type: string
-
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - message
-              properties:
-                message:
-                  type: string
-                  description: Message text to send.
-                model:
-                  type: string
-                  description: Model to use for the message. Default is `gyro-1000` but a pro user can use `gyro-2000`. Will return 403 if the user does not have a pro plan but does have a basic plan. These will default to the latest models (which start at `gyro-1001` and `gyro-2001`, but will increase over time).
-                  enum: [ 'gyro-1000', 'gyro-2000' ]
-                n_sources:
-                  type: number
-                  description: Number of sources to use for the response. Default is 3, but can be any number between 0 and 50 (`gyro-1xxx`) and 0 and 25 (`'`gyro-2xxx`). Will throw a 500 error if out of bounds/
-                  minimum: 0
-                  maximum: 50
-                  default: 3
-
-            examples:
-              Example 1:
-                value:
-                  message: "How can I calculate sin(2*pi)?"
-                  model: "gyro-2000"
-
-      responses:
-        '200':
-          description: Message generated successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  response:
-                    type: string
-                    description: Gyro's response to the message provided.
-                  sources:
-                    type: array
-                    description: List of sources that the response was generated from.
-                    items:
-                      $ref: '#/components/schemas/Document'
-              example:
-                response: "To calculate sin(2*pi), look at the unit circle. As 2*pi is a full rotation, sin(2*pi) = 0."
-                sources:
-                  - source_name: "unit_circle.pdf"
-                    source_value: "So here's something good to note: 2*pi is a full rotation around a circle and equivalent to 0"
-                    download_uri: "https://storage.googleapis.com/gyro-storage/3bb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c/unit_circle.pdf"
-                  - source_name: "trig.pdf"
-                    source_value: "sin(2*pi) = 0"
-                    download_uri: "https://storage.googleapis.com/gyro-storage/3bb98b1f-a1c4-4b6f-bbb2-45cf48b7c33c/trig.pdf"
-
-
-
-        '401':
-          description: User oauth credentials are incorrect.
-          content:
-            application/json:
-              schema:
-                type: object
-        '403':
-          description: User does not have a Gyro plan or is an institution.
-          content:
-            application/json:
-              schema:
-                type: object
-        '500':
-          description: Internal server error.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
-              example:
-                error: 'TypeError: int object is not callable'
-
-    put:
-      tags:
-        - internal/user
-      summary: Edit a message.
-      description: 'Edits a message in the conversation history. IMPORTANT: Also removes all subsequent messages and generates/returns a new response, like before.'
-      parameters:
-        - name: Authorization
-          in: header
-          description: User's ID token. Always required.
-          required: true
-          schema:
-            type: string
-        - name: message_id
-          in: header
-          description: UUID of the message to edit.
-          required: true
-          schema:
-            type: string
-        - name: conversation_id
-          in: path
-          description: UUID of the conversation to ask the message in.
-          required: true
-          schema:
-            type: string
-
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - new_message
-              properties:
-                new_message:
-                  type: string
-                  description: Message text to replace the old message.
-                model:
-                  type: string
-                  description: Model to use for the message. Default is `gyro-1000` but a pro user can use `gyro-2000`. Will return 403 if the user does not have a pro plan but does have a basic plan. These will default to the latest models (which start at `gyro-1001` and `gyro-2001`, but will increase over time).
-                  enum: [ 'gyro-1000', 'gyro-2000' ]
-
-            examples:
-              Example 1:
-                value:
-                  new_message: "How can I peel a banana properly"
-                  model: "gyro-2000"
-      responses:
-        '200':
-          description: Message generated successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  response:
-                    type: string
-                    description: Gyro's response to the message provided.
-                  source_names:
-                    type: array
-                    description: List of source names that the response was generated from.
-                    items:
-                      type: string
-                  source_values:
-                    type: array
-                    description: List of text excerpts that the response was generated from.
-                    items:
-                      type: string
-              example:
-                response: "To peel a banana properly, you should start by peeling the top of the banana. Then, peel the bottom of the banana. Finally, peel the sides of the banana."
-                source_names: [ 'banana_peeling_guide.pdf', 'banana_peeling_guide.pdf', 'banana_peeling_guide.pdf' ]
-                source_values: [ 'To peel a banana properly, you should start by peeling the top of the banana.', 'Then, peel the bottom of the banana.', 'Finally, peel the sides of the banana.' ]
-
-        '401':
-          description: User oauth credentials are incorrect.
-          content:
-            application/json:
-              schema:
-                type: object
-        '403':
-          description: User does not have a Gyro plan or is an institutional account.
-          content:
-            application/json:
-              schema:
-                type: object
-        '500':
-          description: Internal server error.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
-              example:
-                error: 'TypeError: int object is not callable'
-
     delete:
       tags:
         - internal/user
@@ -1077,14 +711,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
     get:
       tags:
         - internal/user
@@ -1110,14 +739,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  messages:
-                    type: array
-                    description: List of messages.
-                    items:
-                      $ref: '#/components/schemas/Message'
-                      description: Message object. See below for schema.
+                $ref: 'common-definitions.yaml#/components/schemas/ListMessages'
               example:
                 messages:
                   - id: "6fff9ba7-3e74-4fd9-bc79-617f422e5877"
@@ -1133,12 +755,6 @@ paths:
                     category: "humanities"
                     cheat_guess: 0.122
 
-        '204':
-          description: No messages found.
-          content:
-            application/json:
-              schema:
-                type: object
         '401':
           description: User oauth credentials are incorrect.
           content:
@@ -1156,21 +772,15 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
-
-  /internal/gyro/conversations/{conversation_id}/messages/stream/?model={model}/:
+  /internal/gyro/conversations/{conversation_id}/messages/stream/:
     post:
       tags:
         - internal/user
-      summary: Send a message for streaming.
-      description: Sends a message. The stream SSE will be returned.
+      summary: Send a message.
+      description: Sends a message. The stream SSE will be returned. The first response will be a string of the list of sources (ex. `["source1.pdf", "source2.pdf"]`). The second response will be a string of the list of what's in the sources (ex. `["source 1 text blah blah", "source 2 text blah"]`. All subsequent responses is the stream for Gyro's response.)
       parameters:
         - name: Authorization
           in: header
@@ -1184,30 +794,12 @@ paths:
           required: true
           schema:
             type: string
-        - name: model
-          in: query
-          description: Model name (optional). Use `gyro-1000` or `gyro-2000` for the latest models.
-          schema:
-            type: string
 
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - message
-              properties:
-                message:
-                  type: string
-                  description: Message text to send.
-                n_sources:
-                  type: number
-                  description: Number of sources to use for the response. Default is 3, but can be any number between 0 and 50 (`gyro-1xxx`) and 0 and 25 (`gyro-2xxx`). Will throw a 500 error if out of bounds/
-                  minimum: 0
-                  maximum: 50
-                  default: 3
+              $ref: 'common-definitions.yaml#/components/schemas/SendMessage'
 
             examples:
               Example 1:
@@ -1240,17 +832,75 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
+    put:
+      tags:
+        - internal/user
+      summary: Edit a message.
+      description: Deletes a message, and sends a new one. The stream SSE will be returned.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+        - name: conversation_id
+          in: path
+          description: UUID of the conversation to ask the message in.
+          required: true
+          schema:
+            type: string
+        - name: message_id
+          in: header
+          description: UUID of the message to edit.
+          required: true
+          schema:
+            type: string
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'common-definitions.yaml#/components/schemas/SendMessage'
+
+            examples:
+              Example 1:
+                value:
+                  message: "How can I calculate sin(2*pi)?"
+
+      responses:
+        '200':
+          description: Stream created successfully.
+          content:
+            text/event-stream:
+              schema:
+                type: string
 
 
-
-  /internal/gyro/user/plan/verify_set:
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have a Gyro plan or is an institution.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
+              example:
+                error: 'TypeError: int object is not callable'
+  /internal/gyro/user/plan/verify/:
     post:
       tags:
         - internal/user
@@ -1271,18 +921,10 @@ paths:
             type: string
 
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - plan
-              properties:
-                plan:
-                  type: string
-                  description: Plan name to buy. Can be `basic` or `pro`. This is only used to verify the amount paid, and doesn't actually change the user's plan.
-
+              $ref: 'common-definitions.yaml#/components/schemas/VerifySet'
             examples:
               Example 1:
                 value:
@@ -1318,14 +960,158 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
+  /internal/gyro/gtky/chat/stream/:
+    post:
+      tags:
+        - internal/user
+      summary: Get-to-know-you chat.
+      description: Sends a message to the get-to-know-you bot. The stream SSE will be returned. Gyro will first ask the user something, so you should send an empty message first to get the streamed response. When a blank message is sent and it is at least a day later than the last get-to-know-you session, a new get-to-know-you conversation will occur.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
 
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'common-definitions.yaml#/components/schemas/GetToKnowYouMsg'
+            examples:
+              Example 1:
+                value:
+                  message: "I am in 11th grade."
+
+      responses:
+        '200':
+          description: Stream created successfully.
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: User does not have a Gyro plan or is an institution.
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
+              example:
+                error: 'TypeError: int object is not callable'
+  /internal/gyro/gtky/chat/:
+    get:
+      tags:
+        - internal/user
+      summary: Get get-to-know-you chat.
+      description: Get a list of messages for a user for the get-to-know-you chat. This is used to populate the message list on the frontend and allow users to see what messages are in a conversation.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                $ref: 'common-definitions.yaml#/components/schemas/ListGtkyMessages'
+              example:
+                messages:
+                  - body: "Hello, how are you?"
+                    role: "human"
+                    created: "2023-12-11T14:30:00Z"
+                    cheat_guess: 0.443
+                  - body: "I'm doing well, thanks!"
+                    role: "ai"
+                    created: "2023-12-11T14:35:00Z"
+
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+
+        '403':
+          description: User does not have appropriate credentials (i.e. institution).
+          content:
+            application/json:
+              schema:
+                type: object
+
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
+  /internal/gyro/gtky/chat/done/:
+    get:
+      tags:
+        - internal/user
+      summary: Get the get-to-know-you chat completion status.
+      description: Get the status of the get-to-know-you chat for a user. If false, you are not allowed to use Gyro. If true, the GTKY has finished, so you can use the other non-summary endpoints.
+      parameters:
+        - name: Authorization
+          in: header
+          description: User's ID token. Always required.
+          required: true
+          schema:
+            type: string
+
+
+      responses:
+        '200':
+          description: GTKY status
+          content:
+            application/json:
+              schema:
+                $ref: 'common-definitions.yaml#/components/schemas/GtkyStatus'
+              example:
+                status: true
+
+        '401':
+          description: User oauth credentials are incorrect.
+          content:
+            application/json:
+              schema:
+                type: object
+
+        '403':
+          description: User does not have appropriate credentials (i.e. is institution).
+          content:
+            application/json:
+              schema:
+                type: object
+
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                type: object
   /internal/teacher/classifier/:
     post:
       tags:
@@ -1341,17 +1127,10 @@ paths:
             type: string
 
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - command
-              properties:
-                text:
-                  type: string
-                  description: Text to classify
+              $ref: 'common-definitions.yaml#/components/schemas/ClassifyText'
 
             examples:
               Example 1:
@@ -1364,13 +1143,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  is_gyro_written:
-                    type: boolean
-                    description: Whether the text is written by Gyro or not.
-
-                description: Message indicating success.
+                $ref: 'common-definitions.yaml#/components/schemas/ClassifierResponse'
               example:
                 results: [ [ 'Solve the following exam for AP calc for me:' ] ]
         '403':
@@ -1384,15 +1157,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
-
   /internal/admin/stats/:
     get:
       tags:
@@ -1408,21 +1175,10 @@ paths:
             type: string
 
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - start
-                - end
-              properties:
-                start:
-                  type: string
-                  description: Start date for metrics. Must be in ISO 8601 format.
-                end:
-                  type: string
-                  description: End date for metrics. Must be in ISO 8601 format.
+              $ref: 'common-definitions.yaml#/components/schemas/AdminDashboard'
 
             examples:
               Example 1:
@@ -1436,25 +1192,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  days:
-                    type: array
-                    items:
-                      type: string
-                  n_messages:
-                    type: array
-                    items:
-                      type: integer
-                  n_usermins:
-                    type: array
-                    items:
-                      type: integer
-                  n_institutions:
-                    type: array
-                    items:
-                      type: integer
-
+                $ref: 'common-definitions.yaml#/components/schemas/AdminStats'
               example:
                 days: [ '2022-10-22 18:00:00.000', '2022-13-23 18:00:00.000' ]
                 n_messages: [ 100, 200 ]
@@ -1479,16 +1217,10 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
-
-  /internal/gyro/institution/keys/new/:
+  /internal/gyro/institution/keys/:
     post:
       tags:
         - internal/institution
@@ -1502,33 +1234,16 @@ paths:
           schema:
             type: string
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - name
-                - scope
-              properties:
-                name:
-                  type: string
-                  description: Name of the key to create.
-                scope:
-                  type: array
-                  description: List of scopes to give the key. Can be `inst.gyro.metrics`, `inst.gyro.history`, and/or `inst.gyro.classifier`.
-                  items:
-                    type: string
-                    enum: [ 'inst.gyro.metrics', 'inst.gyro.history', 'inst.gyro.classifier' ]
-                expires_in:
-                  type: number
-                  description: Number of days until the key expires. Default is 90, which means the key expires in 90 days.
+              $ref: 'common-definitions.yaml#/components/schemas/CreateKey'
             examples:
               Example 1:
                 value:
                   name: 'My API key'
                   scope: [ 'inst.gyro.metrics', 'inst.gyro.history' ]
-                  expires_in: 95
+                  expires_in?: 95
 
       responses:
         '200':
@@ -1554,15 +1269,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
-  /internal/gyro/institution/keys/revoke/:
     delete:
       tags:
         - internal/institution
@@ -1606,15 +1315,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
-  /internal/gyro/institution/keys/:
     get:
       tags:
         - internal/institution
@@ -1634,14 +1337,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  keys:
-                    type: array
-                    description: List of keys.
-                    items:
-                      $ref: '#/components/schemas/ApiKey'
-
+                $ref: 'common-definitions.yaml#/components/schemas/ApiKeys'
 
               example:
                 keys:
@@ -1657,12 +1353,6 @@ paths:
                     last_used_at: '2022-10-22 18:00:00.000'
                     expires_at: '2023-10-22 18:00:00.000'
                     scope: [ 'inst.gyro.metrics', 'inst.gyro.history', 'inst.gyro.classifier' ]
-        '204':
-          description: No keys found.
-          content:
-            application/json:
-              schema:
-                type: object
         '401':
           description: User oauth credentials are incorrect.
           content:
@@ -1680,14 +1370,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
   /internal/gyro/institution/metrics/:
     get:
       tags:
@@ -1703,22 +1388,10 @@ paths:
             type: string
 
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - start
-                - end
-              properties:
-                start:
-                  type: string
-                  description: Start date for metrics. Must be in ISO 8601 format.
-                end:
-                  type: string
-                  description: End date for metrics. Must be in ISO 8601 format.
-
+              $ref: 'common-definitions.yaml#/components/schemas/GetDashboardMetrics'
             examples:
               Example 1:
                 value:
@@ -1731,14 +1404,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  metrics:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Statistic'
-                      description: Statistic objects. See bottom for details.
-
+                $ref: 'common-definitions.yaml#/components/schemas/Stats'
               example:
                 - day: '2022-10-22 18:00:00.000'
                   n_users: 1
@@ -1788,14 +1454,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
   /internal/careers/:
     get:
       tags:
@@ -1809,12 +1470,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  jobs:
-                    $ref: '#/components/schemas/JobSimple'
-                    description: Job objects. See bottom for details.
-                description: Message indicating success.
+                $ref: 'common-definitions.yaml#/components/schemas/Jobs'
               example:
                 - id: 1
                   title_short: 'Software Engineer'
@@ -1833,14 +1489,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
   /internal/careers/{job_id}/:
     get:
       tags:
@@ -1862,35 +1513,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  job_id:
-                    type: number
-                    description: Job ID.
-                  title_short:
-                    type: string
-                    description: Shortened job title.
-                  title_long:
-                    type: string
-                    description: Full job title.
-                  location:
-                    type: string
-                    description: Job location.
-                  description:
-                    type: string
-                    description: Job description.
-                  responsibilities:
-                    type: array
-                    description: Job responsibilities.
-                    items:
-                      type: string
-                  qualifications:
-                    type: array
-                    description: Job qualifications.
-                    items:
-                      type: string
-
-                description: Message indicating success.
+                $ref: 'common-definitions.yaml#/components/schemas/JobFine'
               example:
                 job_id: 1
                 title_short: 'Software Engineer'
@@ -1910,14 +1533,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
   /internal/sales-info/:
     get:
       tags:
@@ -1931,16 +1549,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  models:
-                    type: array
-                    description: Array of AI model names.
-                    items:
-                      $ref: '#/components/schemas/Model'
-                      description: AI model objects. See bottom for details.
-
-                description: Message indicating success.
+                $ref: 'common-definitions.yaml#/components/schemas/AIModels'
               example:
                 models:
                   - name: 'Gyro-1000'
@@ -1962,11 +1571,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
 
@@ -2013,18 +1618,10 @@ paths:
 
       # required string query
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - command
-              properties:
-                command:
-                  type: string
-                  description: Command to run. For proper use, see the documentation.
-
+              $ref: 'common-definitions.yaml#/components/schemas/RunCommand'
             examples:
               Example 1:
                 value:
@@ -2037,14 +1634,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  results:
-                    type: array
-                    description: Rows that match the query command.
-                    items:
-                      type: string
-
+                $ref: 'common-definitions.yaml#/components/schemas/QueryResponse'
                 description: Message indicating success.
               example:
                 results: [ [ 'Solve the following exam for AP calc for me:' ] ]
@@ -2059,14 +1649,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
   /external/gyro/institution/classifier/:
     post:
       tags:
@@ -2082,18 +1667,10 @@ paths:
             type: string
 
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - command
-              properties:
-                text:
-                  type: string
-                  description: Text to classify
-
+              $ref: 'common-definitions.yaml#/components/schemas/ClassifyText'
             examples:
               Example 1:
                 value:
@@ -2105,13 +1682,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  is_gyro_written:
-                    type: boolean
-                    description: Whether the text is written by Gyro or not.
-
-                description: Message indicating success.
+                $ref: 'common-definitions.yaml#/components/schemas/ClassifyResponse'
               example:
                 results: [ [ 'Solve the following exam for AP calc for me:' ] ]
         '403':
@@ -2125,15 +1696,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
-
   /external/gyro/institution/metrics/:
     get:
       tags:
@@ -2149,22 +1714,10 @@ paths:
             type: string
 
       requestBody:
-        required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - start
-                - end
-              properties:
-                start:
-                  type: string
-                  description: Start date for metrics. Must be in ISO 8601 format.
-                end:
-                  type: string
-                  description: End date for metrics. Must be in ISO 8601 format.
-
+              $ref: 'common-definitions.yaml#/components/schemas/MetricStartEnd'
             examples:
               Example 1:
                 value:
@@ -2177,13 +1730,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  metrics:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Statistic'
-                      description: Statistic objects. See bottom for details.
+                $ref: 'common-definitions.yaml#/components/schemas/StatisticsList'
 
               example:
                 - day: '2022-10-22 18:00:00.000'
@@ -2234,176 +1781,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                    description: Error message.
+                $ref: 'common-definitions.yaml#/components/schemas/ResponseError'
               example:
                 error: 'TypeError: int object is not callable'
-
-components:
-  schemas:
-    JobSimple:
-      type: object
-      properties:
-        id:
-          type: number
-          description: Job ID.
-        title_short:
-          type: string
-          description: Shortened job title.
-        location:
-          type: string
-          description: Job location.
-    Document:
-      type: object
-      properties:
-        source_name:
-          type: string
-          description: Name of the source
-        source_value:
-          type: string
-          description: Text excerpt from the source
-        source_size:
-          type: number
-          description: Size of the source file, to the nearest kilobyte
-        download_uri:
-          type: string
-          description: Link to download the source file. Empty string if the user does not have a pro plan.
-    Message:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique identifier of the message
-        body:
-          type: string
-          description: Message text
-        role:
-          type: string
-          description: Who sent the message ("ai", "human")
-        created:
-          type: string
-          description: Date and time when the message was created. ISO 8601 format.
-        category:
-          type: string
-          description: Category of the message ("humanities", "natural_sciences", "social_sciences", "mathematics", "professional", "other")
-        cheat_guess:
-          type: number
-          description: Indicates if the message is related to cheating (0 or 1, binary classifier)
-          minimum: 0
-          maximum: 1
-        sources:
-          type: array
-          description: List of sources (name and corresponding excerpt text)
-          items:
-            $ref: '#/components/schemas/Document'
-    Model:
-      type: object
-      properties:
-        model_name:
-          type: string
-          examples: [ "gyro-1000", "gyro-2000" ]
-        overview:
-          type: string
-          examples: [ "Gyro 1000 is an AI model with advanced capabilties, like loading tons of documents, and more stuff..." ]
-        capabilities:
-          type: array
-          items:
-            type: string
-          examples: [ [ "16k token context window", "Loads up to 50 documents", "Detects cheating nearly perfectly" ] ]
-        requires:
-          type: string
-          examples: [ "Requires a basic plan to use!" ]
-    Conversation:
-      type: object
-      properties:
-        uuid:
-          type: string
-          description: Unique identifier of the conversation
-        name:
-          type: string
-          description: Name of the conversation
-        last_used:
-          type: string
-          description: Date and time when the conversation was created. ISO 8601 format.
-    DocumentInfo:
-      type: object
-      properties:
-        source_name:
-          type: string
-          description: Name of the source
-        source_id:
-          type: string
-          description: Unique identifier of the source
-        file_size:
-          type: number
-          description: Size of the source file, to the nearest kilobyte
-        download_link:
-          type: string
-          description: Link to download the source file
-    ApiKey:
-      type: object
-      properties:
-        key_hint:
-          type: string
-          description: Hint of the API key
-        name:
-          type: string
-          description: Name of the API key
-        uuid:
-          type: string
-          description: Unique identifier of the API key
-        created_at:
-          type: string
-          description: Date and time when the API key was created. ISO 8601 format.
-        last_used:
-          type: string
-          description: Date and time when the API key was last used. ISO 8601 format.
-        expires_at:
-          type: string
-          description: Date and time when the API key expires. ISO 8601 format.
-    Statistic:
-      type: object
-      properties:
-        day:
-          type: string
-          description: Date of the statistic. ISO 8601 format.
-        n_humanities_messages:
-          type: number
-          description: Number of messages sent on that day about humanities.
-        n_humanities_cheating_messages:
-          type: number
-          description: Number of messages sent on that day about humanities that are cheating.
-        n_natural_sciences_messages:
-          type: number
-          description: Number of messages sent on that day about natural sciences.
-        n_natural_sciences_cheating_messages:
-          type: number
-          description: Number of messages sent on that day about natural sciences that are cheating.
-        n_social_sciences_messages:
-          type: number
-          description: Number of messages sent on that day about social sciences.
-        n_social_sciences_cheating_messages:
-          type: number
-          description: Number of messages sent on that day about social sciences that are cheating.
-        n_mathematics_messages:
-          type: number
-          description: Number of messages sent on that day about mathematics.
-        n_mathematics_cheating_messages:
-          type: number
-          description: Number of messages sent on that day about mathematics that are cheating.
-        n_professional_messages:
-          type: number
-          description: Number of messages sent on that day about professional.
-        n_professional_cheating_messages:
-          type: number
-          description: Number of messages sent on that day about professional that are cheating.
-        n_other_messages:
-          type: number
-          description: Number of messages sent on that day about other.
-        n_other_cheating_messages:
-          type: number
-          description: Number of messages sent on that day about other that are cheating.
-

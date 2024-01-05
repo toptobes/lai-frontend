@@ -7,26 +7,26 @@ export type ApiKey = {
   /**
    * Hint of the API key
    */
-  key_hint?: string;
+  key_hint: string;
   /**
    * Name of the API key
    */
-  name?: string;
+  name: string;
   /**
    * Unique identifier of the API key
    */
-  uuid?: string;
+  uuid: string;
   /**
    * Date and time when the API key was created. ISO 8601 format.
    */
-  created_at?: string;
+  created_at: string;
   /**
    * Date and time when the API key was last used. ISO 8601 format.
    */
-  last_used?: string;
+  last_used: string;
   /**
    * Date and time when the API key expires. ISO 8601 format.
    */
-  expires_at?: string;
+  expires_at: string;
 };
 

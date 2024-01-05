@@ -4,9 +4,9 @@
 /* eslint-disable */
 
 export type Model = {
-  model_name?: string;
-  overview?: string;
-  capabilities?: Array<string>;
-  requires?: string;
+  model_name: string;
+  overview: string;
+  capabilities: Array<string>;
+  requires: string;
 };
 
