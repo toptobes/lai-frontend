@@ -19,19 +19,20 @@ export class TeacherAPI {
    * @returns ClassifierResponse Text classified successfully.
    * @throws ApiError
    */
-  public static postTeacherClassifier(
+  public static postGyroTeacherClassifier(
     authorization: string,
     requestBody?: ClassifyText,
   ): CancelablePromise<ClassifierResponse> {
     return __request(OpenAPI, {
       method: 'POST',
-      url: '/teacher/classifier/',
+      url: '/gyro/teacher/classifier/',
       headers: {
         'Authorization': authorization,
       },
       body: requestBody,
       mediaType: 'application/json',
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         403: `User does not have appropriate credentials (is not a teacher).`,
         500: `Internal server error.`,
       },

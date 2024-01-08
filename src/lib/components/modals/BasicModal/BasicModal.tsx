@@ -5,11 +5,11 @@ import { WithModalRef } from '~/lib/hooks/useModalState';
 
 export interface BasicModalProps extends Kids, WithModalRef {
   className?: string,
-  header: string,
+  header?: string,
 }
 
 export const BasicModal = ({ className, header, children, modalRef }: BasicModalProps) =>
   <dialog className={clsx(styles.modal, className)} ref={modalRef}>
-    <h3>{header}</h3>
+    {header && <h3>{header}</h3>}
     {children}
   </dialog>;

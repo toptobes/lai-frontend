@@ -1,6 +1,4 @@
-'use client';
-
-import styles from './Renamer.module.scss';
+import s from './styles/Renamer.module.scss';
 import { Conversation } from '~/app/gyro/Sidebar/ChatbotMenu/ChatbotMenu.types';
 import { useForm } from 'react-hook-form';
 import { Requestee } from '~/lib/hooks/useMediator';
@@ -75,9 +73,9 @@ const RenamerForm = ({ selected, onDone }: RenamerFormProps) => {
   });
 
   return <form
-    id={styles.form}
+    id={s.form}
     onSubmit={onSubmit}
-    className={clsx(loading && styles.loading)}
+    className={clsx(loading && s.loading)}
     onBlur={(e) => {
       !e.currentTarget.contains(e.relatedTarget) && onDone();
     }}

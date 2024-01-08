@@ -1,0 +1,31 @@
+@use "src/styles/use/gyro" as g;
+@use "../../../styles/Sidebar.common" as *;
+
+.chat-settings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 6.35rem;
+  gap: 1rem;
+  width: 95%;
+  height: 100%;
+  animation: 800ms chat-setting-appear forwards;
+
+  & > h5 {
+    @extend .menu-header;
+  }
+
+  & > ul {
+    @extend .menu-ul;
+    overflow-y: scroll;
+    @include g.hide-scrollbar;
+    padding-bottom: 12rem;
+  }
+}
+
+@keyframes conversation-appear {
+  from, 25% {
+    opacity: 0;
+  }
+}

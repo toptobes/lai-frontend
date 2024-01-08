@@ -3,9 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { AdminStat } from './AdminStat';
-
-export type AdminStats = {
-  stats: Array<AdminStat>;
+export type UploadDocumentReturn = {
+  /**
+   * Unique identifier of the document that was just created.
+   */
+  source_id: string;
 };
 

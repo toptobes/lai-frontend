@@ -1,24 +1,23 @@
-'use client';
-
-import styles from './FileInput.module.scss';
+import s from './styles/FileInput.module.scss';
 import { Consumer, pass, prevDefault } from '~/lib/prelude';
 import React from 'react';
 import { useModalState } from '~/lib/hooks/useModalState';
-import { WithSelected } from '~/app/gyro/Sidebar/ChatbotMenu/Settings/ChatSettings';
 import { UploadDocModal } from '~/app/gyro/Sidebar/ChatbotMenu/Settings/UploadDocModal';
 
+import { WithSelected } from '~/app/gyro/Sidebar/ChatbotMenu/Settings/ChatSettings';
+
 export interface FileModalState {
-  name?: string,
-  ext?: string,
   multipleUploads: boolean,
+  name: string,
+  ext: string,
   file: File,
 }
 
 export const FileInput = ({ selected }: WithSelected) => {
-  const { modalRef, modalState, showModal, hideModal } = useModalState<File[], FileModalState>({
+  const { showModal, modalProps } = useModalState<File[], FileModalState>({
     contramap: (files) => ({
-      name: files[0].name?.split('.').slice(0, -1).join('.'),
-      ext: files[0].name?.split('.').pop(),
+      name: files[0].name.split('.').slice(0, -1).join('.'),
+      ext: files[0].name.split('.').pop() ?? '',
       multipleUploads: files.length > 1,
       file: files[0],
     }),
@@ -26,7 +25,7 @@ export const FileInput = ({ selected }: WithSelected) => {
 
   return <>
     <FileDragDrop openModal={showModal}/>
-    <UploadDocModal modalRef={modalRef} modalState={modalState} closeModal={hideModal} selected={selected}/>
+    <UploadDocModal {...modalProps} selected={selected}/>
   </>
 }
 
@@ -37,13 +36,13 @@ const FileDragDrop = ({ openModal }: { openModal: Consumer<File[]> }) => {
   });
 
   // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-  return <section id={styles.dropZone} onDrop={handleFIUpload} onDragOver={prevDefault(pass)} onPaste={handleFIUpload}>
-    <label className={styles.uploadBtn}>
+  return <section id={s.dropZone} onDrop={handleFIUpload} onDragOver={prevDefault(pass)} onPaste={handleFIUpload}>
+    <label className={s.uploadBtn}>
       Upload file
       <input type="file" onChange={handleFIUpload}/>
     </label>
-    <div className={styles.labelWrapper}>
-      <label htmlFor={styles.dropZone}>
+    <div className={s.labelWrapper}>
+      <label htmlFor={s.dropZone}>
         upload, drag, or paste<br/>any text or document here<br/><span>(.txt, .pdf, .docx, etc.)</span>
       </label>
     </div>

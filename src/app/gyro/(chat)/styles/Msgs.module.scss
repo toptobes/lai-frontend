@@ -1,0 +1,29 @@
+@use "../../../../styles/use/gyro" as g;
+@use "../styles/Chat.common" as *;
+
+#start-of-chat {
+  height: .5rem;
+  color: color-mix(in srgb, g.$background 60%, rgba(183, 201, 200, 0.25));
+  padding-top: g.$nav-height + 1.5rem;
+  margin: auto 0 0;
+}
+
+#msg-list {
+  width: 100%;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.skele-logo {
+  background: url("../../../../../public/logos/logo-big-skeleton.svg") center no-repeat;
+  width: clamp(25rem, 75%, 40rem);
+  position: absolute;
+  @include g.abs-center-x;
+  top: -5rem;
+  opacity: .75;
+
+  @include sb-break {
+    width: min(36rem, 90%);
+  }
+}

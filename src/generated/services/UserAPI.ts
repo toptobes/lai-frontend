@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ConversationName } from '../models/ConversationName';
+import type { ConversationReturn } from '../models/ConversationReturn';
 import type { CreatedEntity } from '../models/CreatedEntity';
 import type { EntityCreationResult } from '../models/EntityCreationResult';
 import type { FetchConvos } from '../models/FetchConvos';
@@ -16,6 +17,7 @@ import type { ListMessages } from '../models/ListMessages';
 import type { NewConversationName } from '../models/NewConversationName';
 import type { SendMessage } from '../models/SendMessage';
 import type { UploadDocument } from '../models/UploadDocument';
+import type { UploadDocumentReturn } from '../models/UploadDocumentReturn';
 import type { UserProfileEdit } from '../models/UserProfileEdit';
 import type { VerifySet } from '../models/VerifySet';
 
@@ -134,13 +136,13 @@ export class UserAPI {
    * Create a conversation with Gyro for a specific user.
    * @param authorization User's ID token. Always required.
    * @param requestBody
-   * @returns any Conversation created successfully.
+   * @returns ConversationReturn Conversation created successfully.
    * @throws ApiError
    */
   public static postGyroConversationsNew(
     authorization: string,
     requestBody?: ConversationName,
-  ): CancelablePromise<Record<string, any>> {
+  ): CancelablePromise<ConversationReturn> {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/gyro/conversations/new/',
@@ -184,8 +186,10 @@ export class UserAPI {
       body: requestBody,
       mediaType: 'application/json',
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have a gyro plan or is an institution.`,
+        404: `Conversation does not exist.`,
         500: `Internal server error.`,
       },
     });
@@ -213,8 +217,10 @@ export class UserAPI {
         'Authorization': authorization,
       },
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have a gyro plan or is an institution.`,
+        404: `Conversation does not exist.`,
         500: `Internal server error.`,
       },
     });
@@ -237,6 +243,7 @@ export class UserAPI {
         'Authorization': authorization,
       },
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have appropriate credentials.`,
         500: `Internal server error.`,
@@ -250,14 +257,14 @@ export class UserAPI {
    * @param authorization User's ID token. Always required.
    * @param conversationId UUID of the conversation as a string.
    * @param formData
-   * @returns any Document uploaded successfully.
+   * @returns UploadDocumentReturn Document uploaded successfully.
    * @throws ApiError
    */
   public static postGyroDocuments(
     authorization: string,
     conversationId: string,
     formData?: UploadDocument,
-  ): CancelablePromise<Record<string, any>> {
+  ): CancelablePromise<UploadDocumentReturn> {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/gyro/documents/{conversation_id}/',
@@ -270,8 +277,10 @@ export class UserAPI {
       formData: formData,
       mediaType: 'multipart/form-data',
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have a Gyro plan or is an institution.`,
+        404: `Conversation does not exist.`,
         500: `Internal server error.`,
       },
     });
@@ -299,8 +308,10 @@ export class UserAPI {
         'Authorization': authorization,
       },
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have appropriate credentials.`,
+        404: `Conversation does not exist.`,
         500: `Internal server error.`,
       },
     });
@@ -331,8 +342,10 @@ export class UserAPI {
         'Authorization': authorization,
       },
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have appropriate credentials (i.e. institution).`,
+        404: `Conversation does not exist.`,
         500: `Internal server error.`,
       },
     });
@@ -340,7 +353,7 @@ export class UserAPI {
 
   /**
    * Delete a message.
-   * Send a message to Gyro and recieve its response.
+   * Delete a message from the message history.
    * @param authorization User's ID token. Always required.
    * @param conversationId UUID of the conversation to delete a message in.
    * @param messageId Message UUID.
@@ -354,17 +367,19 @@ export class UserAPI {
   ): CancelablePromise<Record<string, any>> {
     return __request(OpenAPI, {
       method: 'DELETE',
-      url: '/gyro/conversations/{conversation_id}/messages/',
+      url: '/gyro/conversations/{conversation_id}/messages/{message_id}/',
       path: {
         'conversation_id': conversationId,
+        'message_id': messageId,
       },
       headers: {
         'Authorization': authorization,
-        'message_id': messageId,
       },
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User is not a regular user (i.e. institution).`,
+        404: `Conversation does not exist.`,
         500: `Internal server error.`,
       },
     });
@@ -392,8 +407,10 @@ export class UserAPI {
         'Authorization': authorization,
       },
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have appropriate credentials.`,
+        404: `Conversation does not exist.`,
         500: `Internal server error.`,
       },
     });
@@ -425,8 +442,10 @@ export class UserAPI {
       body: requestBody,
       mediaType: 'application/json',
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have a Gyro plan or is an institution.`,
+        404: `Conversation does not exist.`,
         500: `Internal server error.`,
       },
     });
@@ -450,19 +469,21 @@ export class UserAPI {
   ): CancelablePromise<string> {
     return __request(OpenAPI, {
       method: 'PUT',
-      url: '/gyro/conversations/{conversation_id}/messages/stream/',
+      url: '/gyro/conversations/{conversation_id}/messages/{message_id}/stream/',
       path: {
         'conversation_id': conversationId,
+        'message_id': messageId,
       },
       headers: {
         'Authorization': authorization,
-        'message_id': messageId,
       },
       body: requestBody,
       mediaType: 'application/json',
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have a Gyro plan or is an institution.`,
+        404: `Conversation does not exist.`,
         500: `Internal server error.`,
       },
     });
@@ -492,6 +513,7 @@ export class UserAPI {
       body: requestBody,
       mediaType: 'application/json',
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User has incorrect permissions (i.e. institution account type) or an invalid payment token.`,
         500: `Internal server error.`,
@@ -520,6 +542,7 @@ export class UserAPI {
       body: requestBody,
       mediaType: 'application/json',
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have a Gyro plan or is an institution.`,
         500: `Internal server error.`,
@@ -544,6 +567,7 @@ export class UserAPI {
         'Authorization': authorization,
       },
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have appropriate credentials (i.e. institution).`,
         500: `Internal server error.`,
@@ -568,6 +592,7 @@ export class UserAPI {
         'Authorization': authorization,
       },
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have appropriate credentials (i.e. is institution).`,
         500: `Internal server error.`,

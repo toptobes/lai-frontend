@@ -1,11 +1,13 @@
 'use client';
 
 import { createContext, useContext, useState } from 'react';
-import { Kids, not } from '~/lib/prelude';
+import { Kids } from '~/lib/prelude';
+import s from '~/app/gyro/Sidebar/styles/Sidebar.module.scss';
 
 export interface SidebarLockCtx {
-  locked: boolean;
-  toggleLock: () => void;
+  lockedClass: string | undefined;
+  toggleNoClose: () => void;
+  setNoOpen: (to: boolean) => void;
 }
 
 const SidebarLockCtx = createContext<SidebarLockCtx>(null!);
@@ -13,13 +15,17 @@ const SidebarLockCtx = createContext<SidebarLockCtx>(null!);
 export const useSidebarLock = () => useContext(SidebarLockCtx);
 
 export const SidebarLockCtxProvider = ({ children }: Kids) => {
-  const [locked, setLocked] = useState(false);
+  const [lockedClass, setLockedClass] = useState<string | undefined>(s.sidebarNoOpen);
 
-  const toggleLock = () => setLocked(not);
+  const setNoClose = () => {
+    setLockedClass(state => state === s.sidebarNoClose ? undefined : s.sidebarNoClose);
+  }
 
-  return (
-    <SidebarLockCtx.Provider value={{ locked, toggleLock }}>
-      {children}
-    </SidebarLockCtx.Provider>
-  );
+  const setNoOpen = (to: boolean) => {
+    setLockedClass(state => state === s.sidebarNoClose ? s.sidebarNoClose : to ? s.sidebarNoOpen : undefined);
+  }
+
+  return <SidebarLockCtx.Provider value={{ lockedClass, toggleNoClose: setNoClose, setNoOpen }}>
+    {children}
+  </SidebarLockCtx.Provider>
 }

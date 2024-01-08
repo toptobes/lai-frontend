@@ -8,6 +8,7 @@ export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { AdminDashboard as AdminDashboardDTO } from './models/AdminDashboard';
+export type { AdminStat as AdminStatDTO } from './models/AdminStat';
 export type { AdminStats as AdminStatsDTO } from './models/AdminStats';
 export type { AIModels as AIModelsDTO } from './models/AIModels';
 export type { ApiKey as ApiKeyDTO } from './models/ApiKey';
@@ -17,6 +18,7 @@ export type { ClassifyResponse as ClassifyResponseDTO } from './models/ClassifyR
 export type { ClassifyText as ClassifyTextDTO } from './models/ClassifyText';
 export type { Conversation as ConversationDTO } from './models/Conversation';
 export type { ConversationName as ConversationNameDTO } from './models/ConversationName';
+export type { ConversationReturn as ConversationReturnDTO } from './models/ConversationReturn';
 export type { CreatedEntity as CreatedEntityDTO } from './models/CreatedEntity';
 export type { CreateKey as CreateKeyDTO } from './models/CreateKey';
 export type { Document as DocumentDTO } from './models/Document';
@@ -50,6 +52,7 @@ export type { StatisticsList as StatisticsListDTO } from './models/StatisticsLis
 export type { Stats as StatsDTO } from './models/Stats';
 export type { StreamMessage as StreamMessageDTO } from './models/StreamMessage';
 export type { UploadDocument as UploadDocumentDTO } from './models/UploadDocument';
+export type { UploadDocumentReturn as UploadDocumentReturnDTO } from './models/UploadDocumentReturn';
 export type { UserProfileEdit as UserProfileEditDTO } from './models/UserProfileEdit';
 export type { VerifySet as VerifySetDTO } from './models/VerifySet';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import styles from './DashboardMenu.module.scss';
+import s from './DashboardMenu.module.scss';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
@@ -34,7 +34,7 @@ const links = [
 ]
 
 export const DashboardMenu = () =>
-  <ul className={styles.menuList}>{
+  <ul className={s.menuList}>{
     links.map(link => <NavLink key={link.name} link={link}/>)
   }</ul>
 
@@ -42,7 +42,7 @@ const NavLink = ({ link }: { link: Link }) => {
   const pathname = usePathname();
 
   const isSelected = pathname === link.href;
-  const className = clsx(styles.menuListContent, isSelected && styles.menuListCurrent);
+  const className = clsx(s.menuListContent, isSelected && s.menuListCurrent);
 
   return <li>
     <Link href={link.href} scroll={false} className={className}>{link.name}</Link>

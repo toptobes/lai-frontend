@@ -1,21 +1,20 @@
-'use client';
-
 import { useRouter } from 'next/navigation';
 import { useSidebarLock } from '~/lib/gyro/contexts/SidebarLockCtx';
 import clsx from 'clsx';
-import styles from './Group.module.scss';
+import styles from './styles/Group.module.scss';
 import { noProp } from '~/lib/prelude';
 import { SyntheticEvent } from 'react';
 import { GroupProps } from '~/app/gyro/Sidebar/ChatbotMenu/Conversations/Group';
+import { Conversation as ConversationT } from '~/app/gyro/Sidebar/ChatbotMenu/ChatbotMenu.types';
 
 interface ConversationProps extends Omit<GroupProps, 'group'> {
-  conversation: Conversation,
+  conversation: ConversationT,
   li: number,
 }
 
 export const Conversation = ({ conversation, currentID, si, li, state, dispatch, renamer }: ConversationProps) => {
   const { push } = useRouter();
-  const { toggleLock } = useSidebarLock();
+  const { toggleNoClose } = useSidebarLock();
 
   const isSelected = conversation.ord === state.selected?.ord;
 
@@ -29,7 +28,7 @@ export const Conversation = ({ conversation, currentID, si, li, state, dispatch,
   const toggleMenuMode = noProp((e: SyntheticEvent) => {
     e.target instanceof HTMLButtonElement && e.target.blur();
     dispatch({ action: 'toggle-settings', conversation });
-    toggleLock();
+    toggleNoClose();
   });
 
   const onListClick = !isSelected

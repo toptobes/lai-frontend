@@ -8,7 +8,7 @@ import {
   UsedDoc
 } from './ChatbotMenu.types';
 import { Action, io, snd } from '~/lib/prelude';
-import { WithContainerRef } from '~/app/gyro/Sidebar';
+import { WithContainerRef } from '~/app/gyro/Sidebar/Sidebar';
 import styles from './ChatbotMenu.module.scss';
 import type { FetchConvos } from '~/generated/models/FetchConvos';
 import type { FetchDocs } from '~/generated/models/FetchDocs';
@@ -71,18 +71,29 @@ export const reducer = (state: HistoryState, action: HistoryAction): HistoryStat
       };
     }
 
-    case 'set-name': {
-      const groups = state.groups!.map<ConversationGroup>(([date, convos]) => (
-        [date, convos.map(c => c.uuid === action.on.uuid ? { ...c, name: action.newName } : c)]
+    case 'set-selected-name': {
+      const selectedUUID = state.selected!.uuid;
+
+      const groups = state.groups?.map<ConversationGroup>(([date, convos]) => (
+        [date, convos.map(c => c.uuid === selectedUUID ? { ...c, name: action.name } : c)]
       ));
 
-      const selected = (state.selected?.uuid === action.on.uuid)
-        ? { ...state.selected, name: action.newName }
-        : state.selected;
+      const selected = { ...state.selected!, name: action.name }
 
       return {
         ...state,
         selected,
+        groups,
+      };
+    }
+
+    case 'del-selected-chat': {
+      const groups = state.groups?.map<ConversationGroup>(([date, convos]) => (
+        [date, convos.filter(c => c.uuid !== state.selected!.uuid)]
+      )).filter(([, convos]) => convos.length > 0);
+
+      return {
+        ...state,
         groups,
       };
     }
@@ -181,7 +192,7 @@ const mkNewGroups = (action: Action<HistoryAction, 'new-chat'>, groups: Conversa
 
   const newConvo = {
     name: action.name,
-    uuid: action.name,
+    uuid: action.uuid,
     date: 'Today',
     ord: 0,
   }

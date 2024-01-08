@@ -1,8 +1,7 @@
 import { CSSProperties, Dispatch } from 'react';
-import { Consumer, DTOType, IO } from '~/lib/prelude';
-import { WithContainerRef } from '~/app/gyro/Sidebar';
-import { UserAPI } from '~/generated';
-import { RenamerDoneArgs, MaybeRenamerDoneArgsWithCleanup } from '~/app/gyro/Sidebar/ChatbotMenu/Settings/Renamer';
+import { Consumer, IO } from '~/lib/prelude';
+import { RenamerDoneArgs } from '~/app/gyro/Sidebar/ChatbotMenu/Settings/Renamer';
+import { WithContainerRef } from '~/app/gyro/Sidebar/Sidebar';
 
 export interface Conversation {
   uuid: string,
@@ -26,7 +25,8 @@ export type HistoryAction =
   | { action: 'new-chat', name: string, uuid: string }
   | { action: 'set-msgs', groups: ConversationGroup[] }
   | { action: 'reset-msg-animations' }
-  | { action: 'set-name' } & RenamerDoneArgs
+  | { action: 'set-selected-name', name: string }
+  | { action: 'del-selected-chat' }
 
 export interface HistoryState extends WithContainerRef {
   selected: Conversation | undefined,

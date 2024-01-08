@@ -34,6 +34,14 @@ components:
         new_conversation_name:
           type: string
           description: New name for the conversation.
+    UploadDocumentReturn:
+      type: object
+      required:
+        - source_id
+      properties:
+        source_id:
+          type: string
+          description: Unique identifier of the document that was just created.
     UploadDocument:
       type: object
       required:
@@ -159,6 +167,18 @@ components:
         expires_in?:
           type: number
           description: Number of days until the key expires. Default is 90, which means the key expires in 90 days.
+    GetCreateKey:
+      type: object
+      required:
+        - key
+        - key_id
+      properties:
+        key:
+          type: string
+          description: Key to create.
+        key_id:
+          type: string
+          description: Unique identifier of the key that was just created. Used to delete it.
     GetDashboardMetrics:
       type: object
       required:
@@ -321,30 +341,35 @@ components:
           type: boolean
           description: Whether the text is written by Gyro or not.
       description: Message indicating success.
+    AdminStat:
+      type: object
+      required:
+        - day
+        - n_messages
+        - n_users
+        - n_conversations
+        - n_institutions
+      properties:
+        day:
+          type: string
+        n_messages:
+          type: integer
+        n_conversations:
+          type: integer
+        n_users:
+          type: integer
+        n_institutions:
+          type: integer
     AdminStats:
       type: object
       required:
-        - days
-        - n_messages
-        - n_usermins
-        - n_institutions
+        - stats
       properties:
-        days:
+        stats:
           type: array
           items:
-            type: string
-        n_messages:
-          type: array
-          items:
-            type: integer
-        n_usermins:
-          type: array
-          items:
-            type: integer
-        n_institutions:
-          type: array
-          items:
-            type: integer
+            $ref: '#/components/schemas/AdminStat'
+            description: Statistic objects. See bottom for details.
     ApiKeys:
       type: object
       required:
@@ -376,6 +401,14 @@ components:
             $ref: '#/components/schemas/JobSimple'
           description: Job objects. See bottom for details.
       description: Message indicating success.
+    ConversationReturn:
+      type: object
+      required:
+        - conversation_id
+      properties:
+        conversation_id:
+          type: string
+          description: Unique identifier of the conversation that was just created.
     JobFine:
       type: object
       required:
@@ -607,7 +640,7 @@ components:
       required:
         - key_hint
         - name
-        - uuid
+        - key_id
         - created_at
         - last_used
         - expires_at
@@ -619,7 +652,7 @@ components:
         name:
           type: string
           description: Name of the API key
-        uuid:
+        key_id:
           type: string
           description: Unique identifier of the API key
         created_at:

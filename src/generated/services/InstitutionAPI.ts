@@ -34,6 +34,7 @@ export class InstitutionAPI {
       body: requestBody,
       mediaType: 'application/json',
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User is not an institution.`,
         500: `Internal server error.`,
@@ -61,6 +62,7 @@ export class InstitutionAPI {
         'key_id': keyId,
       },
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User is not an institution.`,
         500: `Internal server error.`,
@@ -85,6 +87,7 @@ export class InstitutionAPI {
         'Authorization': authorization,
       },
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have appropriate credentials.`,
         500: `Internal server error.`,
@@ -113,6 +116,7 @@ export class InstitutionAPI {
       body: requestBody,
       mediaType: 'application/json',
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have appropriate credentials.`,
         500: `Internal server error.`,

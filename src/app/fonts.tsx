@@ -10,12 +10,6 @@ export const openSans = Open_Sans({
   display: 'swap',
 });
 
-export const firaSans = Fira_Sans({
-  subsets: ['latin'],
-  weight: '400',
-  display: 'swap',
-});
-
 export const mono = JetBrains_Mono({
   subsets: ['latin'],
   display: 'swap',

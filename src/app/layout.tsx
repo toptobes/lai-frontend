@@ -1,14 +1,14 @@
 import { Metadata } from 'next'
-import React from 'react';
 import Providers from '~/app/providers';
 import { openSans } from '~/app/fonts';
 import '~/styles/main.scss';
+import { Kids } from '~/lib/prelude';
 
 export const metadata: Metadata = {
   title: 'LindauerAI',
 }
 
-const Root = ({ children }: { children: React.ReactNode }) =>
+const Root = ({ children }: Kids) =>
   <html lang="en" suppressHydrationWarning>
   <body className={openSans.className}>
     <Providers>{children}</Providers>

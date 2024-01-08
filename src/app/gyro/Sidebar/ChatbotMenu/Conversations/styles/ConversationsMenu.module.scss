@@ -1,0 +1,67 @@
+@use "src/styles/use/gyro" as g;
+@use "../../../styles/Sidebar.common" as *;
+
+.new-chat-btn {
+  @extend .plus-btn;
+  @include g.size(3.5rem);
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  border-bottom-left-radius: 0;
+  box-shadow: g.gray(40) 0 0 1rem;
+  transform-origin: bottom left;
+}
+
+.centered-new-chat-btn {
+  @extend .new-chat-btn;
+  @include g.size(3rem);
+  border-radius: 50%;
+  position: static;
+  transform: translateX(-.25ch);
+}
+
+.loading-wrapper {
+  @include g.size(100%);
+  @include g.flex-center;
+
+  & > h4 {
+    @extend .menu-header;
+  }
+}
+
+.no-convo-wrapper {
+  @include g.size(100%);
+  padding-top: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+
+  & > h4 {
+    @extend .menu-header;
+  }
+
+  & > button {
+    width: fit-content;
+    padding: .5rem;
+
+    border: none;
+    border-radius: .4rem;
+
+    transition: all 100ms ease-in-out;
+    background: linear-gradient(-45deg, #5E3BAADD, #8861DBDD 55%);
+    color: g.gray(225);
+
+    &:hover {
+      background: linear-gradient(-45deg, #5E3BAA, #8861DB 55%);
+      color: g.gray(250);
+    }
+
+    &:disabled {
+      filter: grayscale(100%);
+      opacity: .5;
+    }
+  }
+}

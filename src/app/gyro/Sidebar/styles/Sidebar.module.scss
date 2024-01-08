@@ -17,8 +17,12 @@
     }
   }
 
-  &--locked {
-      width: 40rem;
+  &--no-open {
+    width: g.$sb-width !important;
+  }
+
+  &--no-close {
+    width: 40rem !important;
   }
 
   @media (max-width: g.$sb-break) {
@@ -38,7 +42,7 @@
 
   & > a:first-of-type {
     cursor: pointer;
-    background: url("../../../../public/logos/logo-small.svg") no-repeat center;
+    background: url("../../../../../public/logos/logo-small.svg") no-repeat center;
     @include g.size(2.5rem);
   }
 

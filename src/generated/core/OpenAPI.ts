@@ -20,7 +20,7 @@ export type OpenAPIConfig = {
 };
 
 export const OpenAPI: OpenAPIConfig = {
-  BASE: 'https://gyro-405519.uc.r.appspot.com/internal',
+  BASE: 'https://www.api.lindauerai.com/internal',
   VERSION: '1.0.2',
   WITH_CREDENTIALS: false,
   CREDENTIALS: 'include',

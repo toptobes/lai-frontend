@@ -1,0 +1,16 @@
+@use "../../../../styles/use/gyro" as g;
+
+$body-width: var(--body-width);
+$dark-white: #DDDDDD;
+
+@mixin sb-break {
+  @media screen and (max-width: g.$sb-break) {
+    @content;
+  }
+}
+
+@mixin msgs-break {
+  @media screen and ((max-width: 625px) or ((min-width: g.$sb-break) and (max-width: 1450px))) {
+    @content;
+  }
+}

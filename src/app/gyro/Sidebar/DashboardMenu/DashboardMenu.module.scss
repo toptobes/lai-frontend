@@ -1,5 +1,5 @@
-@use "../../../../styles/use/gyro" as g;
-@use "../Sidebar.common" as *;
+@use "src/styles/use/gyro" as g;
+@use "../styles/Sidebar.common" as *;
 
 .menu-list {
   @extend .menu-ul;

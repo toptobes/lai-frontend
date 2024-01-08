@@ -1,0 +1,22 @@
+@use "../../../../styles/use/gyro" as g;
+@use "Chat.common" as *;
+
+#main {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: calc(100% - #{g.$sb-width});
+  --body-width: max(58%, 400px);
+  margin-left: g.$sb-width;
+  height: 100vh;
+  position: relative;
+  padding-bottom: calc(3rem + 56px);
+  color: $dark-white;
+  overflow-y: auto;
+
+  @include sb-break {
+    width: 100vw;
+    --body-width: calc(100% - 2rem);
+    margin-left: 0;
+  }
+}

@@ -19,19 +19,20 @@ export class AdminAPI {
    * @returns AdminStats Returns a list of metrics to display on the institution dashboard.
    * @throws ApiError
    */
-  public static getAdminStats(
+  public static getGyroAdminStats(
     authorization: string,
     requestBody?: AdminDashboard,
   ): CancelablePromise<AdminStats> {
     return __request(OpenAPI, {
       method: 'GET',
-      url: '/admin/stats/',
+      url: '/gyro/admin/stats/',
       headers: {
         'Authorization': authorization,
       },
       body: requestBody,
       mediaType: 'application/json',
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         401: `User oauth credentials are incorrect.`,
         403: `User does not have appropriate credentials.`,
         500: `Internal server error.`,

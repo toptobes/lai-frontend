@@ -1,5 +1,5 @@
 @use "src/styles/use/gyro" as g;
-@use "../../Sidebar.common" as *;
+@use "../../../styles/Sidebar.common" as *;
 
 .upload-modal {
   &__elem-col {

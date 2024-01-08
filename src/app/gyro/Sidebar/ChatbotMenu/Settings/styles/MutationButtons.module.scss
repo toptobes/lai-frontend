@@ -1,0 +1,82 @@
+@use "src/styles/use/gyro" as g;
+@use "../../../styles/Sidebar.common" as *;
+
+.wrapper {
+  @include g.flex-center;
+}
+
+@mixin chat-settings__button($img, $hover-color) {
+  @include g.size(2.5rem);
+  background: g.$selected g.icon($img);
+  margin-inline: .5rem;
+  border-radius: 10px;
+  transition: background-color 100ms;
+  position: relative;
+
+  &--active {
+    background-color: $hover-color;
+  }
+
+  &:hover {
+    background-color: $hover-color;
+  }
+}
+
+.rename-chat {
+  @include chat-settings__button('edit', rgba(96, 225, 55, 0.44));
+  background-size: 80%;
+}
+
+.delete-chat {
+  @include chat-settings__button('trash', rgba(255, 59, 48, 0.44));
+  background-size: 58%;
+
+  &--loading {
+    background: rgba(255, 59, 48, 0.44);
+
+    &::after {
+      content: '';
+      position: absolute;
+      @include g.size(100%);
+      @include g.abs-center;
+      background: g.icon('circle-check-2-outline');
+      animation: rotating 1250ms ease-in-out infinite;
+      filter: invert(95%) sepia(2%) saturate(7418%) hue-rotate(188deg) brightness(135%) contrast(72%);
+      background-size: 60% 60%;
+    }
+  }
+}
+
+.delete-modal {
+  @include g.size(100%);
+  @include g.flex-center;
+  gap: 1rem;
+  padding: .5rem;
+
+  & > button {
+    flex: 1;
+
+    &:first-of-type {
+    }
+
+    &:last-of-type {
+      background: rgba(255, 59, 48, 0.44);
+    }
+  }
+
+  & + p {
+    font-size: .8rem;
+    text-align: center;
+    margin: .5rem 0 0;
+    color: g.$light-gray;
+  }
+}
+
+@keyframes rotating {
+  from {
+    rotate: 0deg;
+  }
+  to {
+    rotate: 360deg;
+  }
+}

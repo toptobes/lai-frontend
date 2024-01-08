@@ -1,0 +1,141 @@
+@use "../../../../styles/use/gyro" as g;
+@use "../styles/Chat.common" as *;
+
+#chat-form {
+  display: flex;
+  flex-flow: row nowrap;
+  width: max(45%, 400px);
+  min-height: 3rem;
+  gap: .5rem;
+  align-items: flex-end;
+  position: fixed;
+  bottom: 2rem;
+  z-index: 1;
+
+  @include sb-break {
+    width: $body-width;
+    bottom: 1rem;
+  }
+
+  & > button {
+    --background: linear-gradient(45deg, #5E3BAA, #8861DB);
+    background: url("../../../../../public/icons/send-airrowplane.svg") center no-repeat, var(--background);
+    @include g.size(3.5rem);
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    z-index: 1;
+    transition: filter 100ms ease-in-out;
+
+    &:hover {
+      filter: brightness(1.1) saturate(1.1);
+    }
+
+    @include msgs-break {
+      --background: transparent;
+      position: absolute;
+      right: 0;
+      scale: .75;
+    }
+  }
+
+  // Hides text from going underneath the message-box
+  &::before {
+    content: '';
+    position: absolute;
+    width: calc(100vw - 22rem);
+    height: 3.5rem;
+    bottom: -3rem;
+    left: 50%;
+    right: 50%;
+    translate: -50%;
+    background: g.$background;
+    box-shadow: 0 -2rem 1.25rem g.$background;
+
+    @include sb-break {
+      width: calc(100vw - 2rem);
+    }
+  }
+}
+
+#textarea-wrapper {
+  flex: 1;
+  max-height: 250px;
+  height: 56px;
+  position: relative;
+}
+
+#textarea {
+  @include g.size(100%);
+  @include g.hide-scrollbar;
+  appearance: none;
+  resize: none;
+  line-height: 1.5rem;
+  border: 1px solid g.$d-purple;
+  border-radius: 10px 0 0 10px;
+  background: g.$chat;
+  padding: 1rem 1rem .9rem;
+  box-sizing: border-box;
+  outline: none;
+  caret-color: $dark-white;
+
+  @include msgs-break {
+    border-radius: 10px;
+    padding-right: 2.75rem;
+  }
+
+  &:focus + #label {
+    opacity: 0;
+  }
+}
+
+#label {
+  @include g.abs-center;
+
+  pointer-events: none;
+  letter-spacing: .1rem;
+  font-size: 1.1rem;
+  text-transform: lowercase;
+  white-space: nowrap;
+
+  transition: opacity 100ms ease-in-out;
+  opacity: .9;
+
+  @include msgs-break {
+    transform: translateX(-.75rem);
+  }
+
+  & > span {
+    color: g.$l-purple;
+  }
+}
+
+.indicator {
+  $color: g.gray(20);
+  $tri-size: .75rem;
+
+  position: absolute;
+  background: $color;
+  top: -3rem - $tri-size;
+  left: 2rem;
+  height: 2.5em;
+  @include g.flex-center;
+  padding-inline: .75rem;
+  font-size: 1.2rem;
+  border-radius: .4rem;
+  transition: opacity 250ms ease-in-out;
+  pointer-events: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    @include g.triangle($tri-size, $tri-size, $color);
+    bottom: -$tri-size;
+    left: calc(50% - $tri-size);
+    rotate: 180deg;
+  }
+
+  &--hidden {
+    transition: opacity 1s 350ms ease-in-out;
+    opacity: 0;
+  }
+}

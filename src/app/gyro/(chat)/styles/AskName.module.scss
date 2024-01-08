@@ -1,0 +1,17 @@
+@use "../../../../styles/use/gyro" as g;
+@use "../styles/Chat.common" as *;
+
+.new-chat-modal {
+  #new-chat-modal__name {}
+
+  &__elem-col {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+  }
+
+  & button {
+    width: fit-content;
+    //background: linear-gradient(-45deg, #553498, #7352b9 55%) !important;
+  }
+}

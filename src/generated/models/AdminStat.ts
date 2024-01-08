@@ -3,9 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { AdminStat } from './AdminStat';
-
-export type AdminStats = {
-  stats: Array<AdminStat>;
+export type AdminStat = {
+  day: string;
+  n_messages: number;
+  n_conversations: number;
+  n_users: number;
+  n_institutions: number;
 };
 

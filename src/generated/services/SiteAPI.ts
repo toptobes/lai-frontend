@@ -46,6 +46,7 @@ export class SiteAPI {
         'job_id': jobId,
       },
       errors: {
+        400: `Missing a passed parameter or body variable.`,
         403: `User is rate-limited`,
         500: `Internal server error.`,
       },
